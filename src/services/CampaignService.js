@@ -44,7 +44,7 @@ class CampaignService {
           status: Campaign.ACTIVE,
           $limit,
           $skip,
-          $sort: { milestonesCount: -1 },
+          $sort: { createdAt: -1 },
         },
       })
       .then(resp => {

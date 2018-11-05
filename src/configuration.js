@@ -1,5 +1,5 @@
 const {
-  REACT_APP_ENVIRONMENT = 'localhost', // optional
+  REACT_APP_ENVIRONMENT = 'rsk', // optional
   REACT_APP_DECIMALS = 8, // optional
   REACT_APP_FEATHERJS_CONNECTION_URL,
   REACT_APP_ETH_NODE_CONNECTION_URL,
@@ -32,6 +32,28 @@ const configurations = {
     analytics: {
       ga_UA: 'UA-103956937-3',
       useGoogleAnalytics: true,
+      useHotjar: false,
+    },
+  },
+  rsk: {
+    title: 'RSK',
+    liquidPledgingAddress: '0x6aAEB5Bc96E54668e8dc02296554f1901aA12900',
+    lppCampaignFactoryAddress: '0xe340b1ec0034c80E12f95552B10E4f83Eb514064',
+    lppCappedMilestoneFactoryAddress: '0x8696dBC9E10451fA60EBAD176cD540968ba1e87a',
+    givethBridgeAddress: '0x60c83456A819A78DD207AD03a69C84c736927Fc1',
+    foreignGivethBridgeAddress: '0xd9ee0aB8eC59e9f855EBeB67c003B206dD7cb451',
+    tokenAddresses: { 'Home Ganache ETH': '0x97730234188e553FbA41D7dd7F8144B0D9289961' },
+    etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
+    homeEtherscan: 'https://ropsten.etherscan.io/', // this won't work, only here so we can see links during development
+    feathersConnection: 'http://localhost:3030',
+    foreignNodeConnection: 'https://rinkeby.infura.io',
+    foreignNetworkName: 'Foreign Ganache',
+    homeNodeConnection: 'http://18.130.79.53:4444',
+    homeNetworkName: 'Home Ganache',
+    sendErrors: false,
+    analytics: {
+      ga_UA: 'UA-103956937-3',
+      useGoogleAnalytics: false,
       useHotjar: false,
     },
   },
