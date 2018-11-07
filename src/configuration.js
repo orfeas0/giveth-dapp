@@ -1,5 +1,5 @@
 const {
-  REACT_APP_ENVIRONMENT = 'rsk', // optional
+  REACT_APP_ENVIRONMENT = 'localhost', // optional
   REACT_APP_DECIMALS = 8, // optional
   REACT_APP_FEATHERJS_CONNECTION_URL,
   REACT_APP_ETH_NODE_CONNECTION_URL,
@@ -45,7 +45,7 @@ const configurations = {
     tokenAddresses: { 'Home Ganache ETH': '0x97730234188e553FbA41D7dd7F8144B0D9289961' },
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     homeEtherscan: 'https://ropsten.etherscan.io/', // this won't work, only here so we can see links during development
-    feathersConnection: 'http://localhost:3030',
+    feathersConnection: 'http://18.130.79.53:3031',
     foreignNodeConnection: 'https://rinkeby.infura.io',
     foreignNetworkName: 'Foreign Ganache',
     homeNodeConnection: 'http://18.130.79.53:4444',
