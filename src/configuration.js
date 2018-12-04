@@ -14,25 +14,26 @@ const {
 
 const configurations = {
   localhost: {
-    title: 'Ganache',
-    liquidPledgingAddress: '0xBeFdf675cb73813952C5A9E4B84ea8B866DBA592',
-    lppCampaignFactoryAddress: '0x9b1f7F645351AF3631a656421eD2e40f2802E6c0',
-    lppCappedMilestoneFactoryAddress: '0x630589690929E9cdEFDeF0734717a9eF3Ec7Fcfe',
-    givethBridgeAddress: '0x8fed3F9126e7051DeA6c530920cb0BAE5ffa17a8',
-    foreignGivethBridgeAddress: '0x8fed3F9126e7051DeA6c530920cb0BAE5ffa17a8',
-    tokenAddresses: {
-      'Home Ganache ETH': '0x5a42ca500aB159c51312B764bb25C135026e7a31',
-      'MiniMe Test Token': '0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab',
-    },
+    title: 'RSK Ganache',
+    liquidPledgingAddress: '0x46579394802b5e4d2C0647436BFcc71A2d9E8478',
+    lppCampaignFactoryAddress: '0x743DC1A12911e3FeEAe76344A465fF480466400e',
+    lppCappedMilestoneFactoryAddress: '0xf810f023A14A26d89A26430DeB972baFE6d88a58',
+    // givethBridgeAddress: '0x8fed3F9126e7051DeA6c530920cb0BAE5ffa17a8',
+    // foreignGivethBridgeAddress: '0x8fed3F9126e7051DeA6c530920cb0BAE5ffa17a8',
+    // tokenAddresses: {
+    //   'Home Ganache ETH': '0x5a42ca500aB159c51312B764bb25C135026e7a31',
+    //   'MiniMe Test Token': '0xe78A0F7E598Cc8b0Bb87894B0F60dD2a88d6a8Ab',
+    // },
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
-    homeEtherscan: 'https://ropsten.etherscan.io/', // this won't work, only here so we can see links during development
+    // homeEtherscan: 'https://ropsten.etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://localhost:3030',
-    foreignNodeConnection: 'http://localhost:8546',
-    foreignNetworkName: 'Foreign Ganache',
-    foreignNetworkId: 67,
-    homeNodeConnection: 'http://localhost:8545',
-    homeNetworkName: 'Home Ganache',
-    homeNetworkId: 66,
+    nodeConnection: 'http://localhost:8548',
+    nodeId: 88,
+    nodeName: 'RSK Ganache',
+    // foreignNetworkName: 'Foreign Ganache',
+    // foreignNetworkId: 67,
+    homeNetworkName: 'RSK Ganache',
+    homeNetworkId: 88,
     ipfsGateway: 'http://localhost:8080/ipfs/',
     sendErrors: false,
     analytics: {
@@ -52,9 +53,8 @@ const configurations = {
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     homeEtherscan: 'https://ropsten.etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://18.130.79.53:3031',
-    foreignNodeConnection: 'https://rinkeby.infura.io',
+    nodeConnection: 'https://rinkeby.infura.io',
     foreignNetworkName: 'Foreign Ganache',
-    homeNodeConnection: 'http://18.130.79.53:4444',
     homeNetworkName: 'Home Ganache',
     sendErrors: false,
     analytics: {
@@ -74,10 +74,9 @@ const configurations = {
     etherscan: 'https://rinkeby.etherscan.io/',
     homeEtherscan: 'https://ropsten.etherscan.io/',
     feathersConnection: 'https://feathers.develop.giveth.io',
-    foreignNodeConnection: 'https://rinkeby.giveth.io',
+    nodeConnection: 'https://rinkeby.giveth.io',
     foreignNetworkName: 'Rinkeby',
     foreignNetworkId: 4,
-    homeNodeConnection: 'https://ropsten.infura.io',
     homeNetworkName: 'Ropsten',
     homeNetworkId: 3,
     ipfsGateway: 'https://ipfs.giveth.io/ipfs/',
@@ -98,10 +97,9 @@ const configurations = {
     etherscan: 'https://rinkeby.etherscan.io/',
     homeEtherscan: 'https://ropsten.etherscan.io/',
     feathersConnection: 'https://feathers.release.giveth.io',
-    foreignNodeConnection: 'https://rinkeby.giveth.io',
+    nodeConnection: 'https://rinkeby.giveth.io',
     foreignNetworkName: 'Rinkeby',
     foreignNetworkId: 4,
-    homeNodeConnection: 'https://ropsten.infura.io',
     homeNetworkName: 'Ropsten',
     homeNetworkId: 3,
     ipfsGateway: 'https://ipfs.giveth.io/ipfs/',
@@ -122,10 +120,9 @@ const configurations = {
     etherscan: 'https://rinkeby.etherscan.io/',
     homeEtherscan: 'https://etherscan.io/',
     feathersConnection: 'https://feathers.beta.giveth.io',
-    foreignNodeConnection: 'https://rinkeby.giveth.io',
+    nodeConnection: 'https://rinkeby.giveth.io',
     foreignNetworkName: 'Rinkeby',
     foreignNetworkId: 4,
-    homeNodeConnection: 'https://mew.giveth.io',
     homeNetworkName: 'Mainnet',
     homeNetworkId: 1,
     ipfsGateway: 'https://ipfs.giveth.io/ipfs/',
@@ -159,7 +156,7 @@ config.tokenAddresses = REACT_APP_TOKEN_ADDRESSES
   : config.tokenAddresses;
 config.etherscan = REACT_APP_BLOCKEXPLORER || config.etherscan;
 config.feathersConnection = REACT_APP_FEATHERJS_CONNECTION_URL || config.feathersConnection;
-config.foreignNodeConnection = REACT_APP_ETH_NODE_CONNECTION_URL || config.foreignNodeConnection;
+config.nodeConnection = REACT_APP_ETH_NODE_CONNECTION_URL || config.nodeConnection;
 config.decimals = REACT_APP_DECIMALS;
 config.bugsEmail = REACT_APP_BUGS_EMAIL;
 config.defaultGasPrice = REACT_APP_DEFAULT_GASPRICE;

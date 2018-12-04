@@ -39,8 +39,7 @@ export default () =>
         newWeb3.enable = newWeb3.eth.getAccounts;
         newWeb3.accountsEnabled = true;
       } else {
-        // we provide a fallback so we can generate/read data
-        newWeb3 = new Web3(config.foreignNodeConnection);
+        newWeb3 = new Web3(config.nodeConnection);
         newWeb3.defaultNode = true;
       }
     }

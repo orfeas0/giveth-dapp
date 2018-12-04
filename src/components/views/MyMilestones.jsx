@@ -958,7 +958,7 @@ class MyMilestones extends Component {
 
                   <NetworkWarning
                     incorrectNetwork={!isForeignNetwork}
-                    networkName={config.foreignNetworkName}
+                    networkName={config.nodeName}
                   />
 
                   <ul className="nav nav-tabs">

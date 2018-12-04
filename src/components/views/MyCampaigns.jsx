@@ -148,7 +148,7 @@ class MyCampaigns extends Component {
 
                   <NetworkWarning
                     incorrectNetwork={!isForeignNetwork}
-                    networkName={config.foreignNetworkName}
+                    networkName={config.nodeName}
                   />
 
                   {isLoading && <Loader className="fixed" />}

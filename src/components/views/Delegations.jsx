@@ -52,7 +52,7 @@ const Delegations = ({ balance }) => (
 
                         <NetworkWarning
                           incorrectNetwork={!isForeignNetwork}
-                          networkName={config.foreignNetworkName}
+                          networkName={config.nodeName}
                         />
 
                         {isLoading && <Loader className="fixed" />}

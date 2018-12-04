@@ -83,9 +83,8 @@ class UserWallet extends Component {
                 <div className="alert alert-warning">
                   <i className="fa fa-exclamation-triangle" />
                   Please <strong>do not send any main network ether</strong> to this address. All
-                  the transactions in the DApp are made on{' '}
-                  <strong>{config.foreignNetworkName}</strong> network. To interact with the DApp
-                  you do not need any main network ether.
+                  the transactions in the DApp are made on <strong>{config.nodeName}</strong>{' '}
+                  network. To interact with the DApp you do not need any main network ether.
                 </div>
                 <p>
                   <a
@@ -102,12 +101,12 @@ class UserWallet extends Component {
                     <p>
                       We noticed that you do not have a sufficient balance in your wallet. Your
                       wallet should be automatically topped up, however if you are a frequent user
-                      or use this wallet on the <strong>{config.foreignNetworkName}</strong>{' '}
-                      network, we may not be able to replenish it fast enough.
+                      or use this wallet on the <strong>{config.nodeName}</strong> network, we may
+                      not be able to replenish it fast enough.
                     </p>
                     <p>
-                      <strong>{config.foreignNetworkName}</strong> balance:{' '}
-                      {this.props.wallet.getBalance()} ETH
+                      <strong>{config.nodeName}</strong> balance: {this.props.wallet.getBalance()}{' '}
+                      ETH
                     </p>
                     <p>
                       You can visit the{' '}
@@ -157,9 +156,8 @@ class UserWallet extends Component {
                           ),
                       )}
                     <div className="alert alert-warning">
-                      We noticed you have some tokens on the{' '}
-                      <strong>{config.foreignNetworkName}</strong> network that have not been
-                      transfered across the bridge to the
+                      We noticed you have some tokens on the <strong>{config.nodeName}</strong>{' '}
+                      network that have not been transfered across the bridge to the
                       <strong>{config.homeNetworkName}</strong> network.
                     </div>
                     <BridgeWithdrawButton

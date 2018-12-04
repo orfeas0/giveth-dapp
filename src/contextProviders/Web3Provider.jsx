@@ -64,8 +64,7 @@ const fetchNetwork = async web3 => ({
 });
 
 const getNetworkState = (networkId, networkType) => ({
-  isHomeNetwork: networkId === config.homeNetworkId,
-  isForeignNetwork: networkId === config.foreignNetworkId,
+  isCorrectNetwork: networkId === config.nodeId,
   currentNetwork: networkType,
 });
 
@@ -91,8 +90,7 @@ class Web3Provider extends Component {
       balance: toBN(-1),
       currentNetwork: undefined,
       validProvider: false,
-      isHomeNetwork: false,
-      isForeignNetwork: false,
+      isCorrectNetwork: false,
       isEnabled: false,
       setupTimeout: false,
     };
@@ -113,6 +111,8 @@ class Web3Provider extends Component {
           this.setState(getNetworkState(networkId, networkType));
         },
       });
+
+      console.log('web3', web3);
 
       if (!web3.defaultNode) {
         pollAccount(web3, {
@@ -209,7 +209,7 @@ class Web3Provider extends Component {
       balance,
       currentNetwork,
       validProvider,
-      isHomeNetwork,
+      isCorrectNetwork,
       isForeignNetwork,
       isEnabled,
       setupTimeout,
@@ -224,7 +224,7 @@ class Web3Provider extends Component {
             balance,
             currentNetwork,
             validProvider,
-            isHomeNetwork,
+            isCorrectNetwork,
             isForeignNetwork,
             isEnabled,
           },

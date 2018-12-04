@@ -1,7 +1,6 @@
 import { LiquidPledging } from 'giveth-liquidpledging';
 import { LPPCampaignFactory } from 'lpp-campaign';
 import { LPPCappedMilestoneFactory } from 'lpp-capped-milestone';
-import { GivethBridge, ForeignGivethBridge } from 'giveth-bridge';
 
 import getWeb3 from './getWeb3';
 import config from '../../configuration';
@@ -58,8 +57,6 @@ export default async () => {
     web3,
     network.lppCappedMilestoneFactoryAddress,
   );
-  network.givethBridge = new GivethBridge(web3, network.givethBridgeAddress);
-  network.foreignGivethBridge = new ForeignGivethBridge(web3, network.foreignGivethBridgeAddress);
 
   network.tokens = {};
   const { tokenWhitelist } = await feathersClient.service('/whitelist').find();

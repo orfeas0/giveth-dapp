@@ -103,7 +103,7 @@ class BaseDonateButton extends React.Component {
 
   pollToken() {
     const { selectedToken } = this.state;
-    const { isHomeNetwork, currentUser } = this.props;
+    const { isCorrectNetwork, currentUser } = this.props;
 
     // stop existing poll
     if (this.stopPolling) {
@@ -121,7 +121,7 @@ class BaseDonateButton extends React.Component {
             const contract = tokens[selectedToken.address];
 
             // we are only interested in homeNetwork token balances
-            if (!isHomeNetwork || !currentUser || !currentUser.address || !contract) {
+            if (!isCorrectNetwork || !currentUser || !currentUser.address || !contract) {
               return utils.toBN(0);
             }
 
@@ -316,7 +316,7 @@ class BaseDonateButton extends React.Component {
   }
 
   render() {
-    const { model, currentUser, isHomeNetwork, ETHBalance, validProvider } = this.props;
+    const { model, currentUser, isCorrectNetwork, ETHBalance, validProvider } = this.props;
     const {
       amount,
       formIsValid,
@@ -374,11 +374,11 @@ class BaseDonateButton extends React.Component {
 
             {validProvider && (
               <NetworkWarning
-                incorrectNetwork={!isHomeNetwork}
+                incorrectNetwork={!isCorrectNetwork}
                 networkName={config.homeNetworkName}
               />
             )}
-            {isHomeNetwork &&
+            {isCorrectNetwork &&
               currentUser && (
                 <p>
                   You&apos;re pledging: as long as the {model.type} owner does not lock your money
@@ -395,7 +395,7 @@ class BaseDonateButton extends React.Component {
               )}
 
             {validProvider &&
-              isHomeNetwork &&
+              isCorrectNetwork &&
               currentUser && (
                 <div>
                   {model.type !== 'milestone' && (
@@ -512,7 +512,7 @@ class BaseDonateButton extends React.Component {
                   className="btn btn-success"
                   formNoValidate
                   type="submit"
-                  disabled={isSaving || !formIsValid || !isHomeNetwork}
+                  disabled={isSaving || !formIsValid || !isCorrectNetwork}
                   isLoading={isSaving}
                   loadingText="Donating..."
                 >
@@ -538,11 +538,11 @@ class BaseDonateButton extends React.Component {
 
 const DonateButton = ({ model, currentUser, maxAmount }) => (
   <Web3Consumer>
-    {({ state: { isHomeNetwork, validProvider, balance } }) => (
+    {({ state: { isCorrectNetwork, validProvider, balance } }) => (
       <BaseDonateButton
         ETHBalance={balance}
         validProvider={validProvider}
-        isHomeNetwork={isHomeNetwork}
+        isCorrectNetwork={isCorrectNetwork}
         model={model}
         currentUser={currentUser}
         maxAmount={maxAmount}
@@ -574,7 +574,7 @@ BaseDonateButton.propTypes = {
   maxAmount: PropTypes.string,
   ETHBalance: PropTypes.objectOf(utils.BN).isRequired,
   validProvider: PropTypes.bool.isRequired,
-  isHomeNetwork: PropTypes.bool.isRequired,
+  isCorrectNetwork: PropTypes.bool.isRequired,
 };
 
 DonateButton.defaultProps = {

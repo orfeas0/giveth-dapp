@@ -31,10 +31,10 @@ const LoaderButton = ({
   network,
 }) => (
   <Web3Consumer>
-    {({ state: { isHomeNetwork, isForeignNetwork } }) => {
+    {({ state: { isCorrectNetwork, isForeignNetwork } }) => {
       const incorrectNetwork =
         network &&
-        ((network === 'Home' && isForeignNetwork) || (network === 'Foreign' && isHomeNetwork));
+        ((network === 'Home' && isForeignNetwork) || (network === 'Foreign' && isCorrectNetwork));
       return (
         <span>
           <button
@@ -55,9 +55,7 @@ const LoaderButton = ({
           {incorrectNetwork && (
             <small className="form-text loader-button-network-help">
               Please choose the{' '}
-              <strong>
-                {network === 'Home' ? config.homeNetworkName : config.foreignNetworkName}
-              </strong>{' '}
+              <strong>{network === 'Home' ? config.homeNetworkName : config.nodeName}</strong>{' '}
               network with your Web3 Provider.
             </small>
           )}

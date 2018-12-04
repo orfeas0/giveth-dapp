@@ -158,7 +158,7 @@ export const checkForeignNetwork = async isForeignNetwork => {
   await React.swal({
     title: 'Network Change Required!',
     text: `Please connect to the ${
-      config.foreignNetworkName
+      config.nodeName
     } network before proceeding. Depending on your provider, the page will be reloaded upon changing the network which may result in loosing data`,
     icon: 'warning',
   });
