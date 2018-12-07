@@ -210,7 +210,6 @@ class Web3Provider extends Component {
       currentNetwork,
       validProvider,
       isCorrectNetwork,
-      isForeignNetwork,
       isEnabled,
       setupTimeout,
     } = this.state;
@@ -225,7 +224,6 @@ class Web3Provider extends Component {
             currentNetwork,
             validProvider,
             isCorrectNetwork,
-            isForeignNetwork,
             isEnabled,
           },
           actions: {

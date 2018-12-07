@@ -43,7 +43,7 @@ const _getTokenWhitelist = () => {
   const r = React.whitelist.tokenWhitelist;
   return r.map(t => {
     if (t.symbol === 'ETH') {
-      t.name = `${config.homeNetworkName} ETH`;
+      t.name = `${config.networkName} ETH`;
     }
     t.balance = '0';
     return t;
@@ -286,7 +286,7 @@ class BaseDelegateMultipleButton extends Component {
       tokenWhitelistOptions,
       selectedToken,
     } = this.state;
-    const { campaign, milestone, validProvider, isForeignNetwork } = this.props;
+    const { campaign, milestone, validProvider, isCorrectNetwork } = this.props;
 
     return (
       <span style={style}>
@@ -309,7 +309,7 @@ class BaseDelegateMultipleButton extends Component {
             </div>
           )}
           {validProvider && (
-            <NetworkWarning incorrectNetwork={!isForeignNetwork} networkName={config.nodeName} />
+            <NetworkWarning incorrectNetwork={!isCorrectNetwork} networkName={config.networkName} />
           )}
           <p>
             You are delegating donations to
@@ -411,7 +411,7 @@ class BaseDelegateMultipleButton extends Component {
                           className="btn btn-success"
                           formNoValidate
                           type="submit"
-                          disabled={isSaving || !isForeignNetwork}
+                          disabled={isSaving || !isCorrectNetwork}
                         >
                           {isSaving ? 'Delegating...' : 'Delegate here'}
                         </button>
@@ -438,11 +438,11 @@ class BaseDelegateMultipleButton extends Component {
 
 const DelegateMultipleButton = props => (
   <Web3Consumer>
-    {({ state: { isForeignNetwork, validProvider, balance } }) => (
+    {({ state: { isCorrectNetwork, validProvider, balance } }) => (
       <BaseDelegateMultipleButton
         ETHBalance={balance}
         validProvider={validProvider}
-        isForeignNetwork={isForeignNetwork}
+        isCorrectNetwork={isCorrectNetwork}
         {...props}
       />
     )}
@@ -456,7 +456,7 @@ BaseDelegateMultipleButton.propTypes = {
   milestone: PropTypes.shape(),
   style: PropTypes.shape(),
   validProvider: PropTypes.bool.isRequired,
-  isForeignNetwork: PropTypes.bool.isRequired,
+  isCorrectNetwork: PropTypes.bool.isRequired,
 };
 
 BaseDelegateMultipleButton.defaultProps = {

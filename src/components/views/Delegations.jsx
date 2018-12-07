@@ -24,7 +24,7 @@ import DelegationProvider, {
  */
 const Delegations = ({ balance }) => (
   <Web3Consumer>
-    {({ state: { isForeignNetwork } }) => (
+    {({ state: { isCorrectNetwork } }) => (
       <UserConsumer>
         {({ state: { currentUser } }) => (
           <DelegationProvider currentUser={currentUser}>
@@ -51,8 +51,8 @@ const Delegations = ({ balance }) => (
                         )}
 
                         <NetworkWarning
-                          incorrectNetwork={!isForeignNetwork}
-                          networkName={config.nodeName}
+                          incorrectNetwork={!isCorrectNetwork}
+                          networkName={config.networkName}
                         />
 
                         {isLoading && <Loader className="fixed" />}
@@ -83,7 +83,7 @@ const Delegations = ({ balance }) => (
                                         to campaigns and milestones */}
                                               {(d.delegateId > 0 ||
                                                 d.ownerTypeId === currentUser.address) &&
-                                                isForeignNetwork &&
+                                                isCorrectNetwork &&
                                                 d.amountRemaining > 0 && (
                                                   <DelegateButton
                                                     types={campaigns.concat(
@@ -100,7 +100,7 @@ const Delegations = ({ balance }) => (
                                               {/* When donated to a campaign, only allow delegation
                                         to milestones of that campaign */}
                                               {d.ownerType === 'campaign' &&
-                                                isForeignNetwork &&
+                                                isCorrectNetwork &&
                                                 d.amountRemaining > 0 && (
                                                   <DelegateButton
                                                     types={milestones.filter(

@@ -135,7 +135,7 @@ class MyCampaigns extends Component {
 
     return (
       <Web3Consumer>
-        {({ state: { isForeignNetwork } }) => (
+        {({ state: { isCorrectNetwork } }) => (
           <div id="campaigns-view">
             <div className="container-fluid page-layout dashboard-table-view">
               <div className="row">
@@ -147,8 +147,8 @@ class MyCampaigns extends Component {
                   <AuthenticationWarning currentUser={currentUser} />
 
                   <NetworkWarning
-                    incorrectNetwork={!isForeignNetwork}
-                    networkName={config.nodeName}
+                    incorrectNetwork={!isCorrectNetwork}
+                    networkName={config.networkName}
                   />
 
                   {isLoading && <Loader className="fixed" />}
@@ -193,7 +193,7 @@ class MyCampaigns extends Component {
 
                                         {(c.reviewerAddress === currentUser.address ||
                                           c.owner.address === currentUser.address) &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           c.isActive && (
                                             <button
                                               type="button"

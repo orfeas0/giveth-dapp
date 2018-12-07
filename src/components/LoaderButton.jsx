@@ -31,37 +31,32 @@ const LoaderButton = ({
   network,
 }) => (
   <Web3Consumer>
-    {({ state: { isCorrectNetwork, isForeignNetwork } }) => {
-      const incorrectNetwork =
-        network &&
-        ((network === 'Home' && isForeignNetwork) || (network === 'Foreign' && isCorrectNetwork));
-      return (
-        <span>
-          <button
-            className={className}
-            formNoValidate={formNoValidate}
-            type={type}
-            disabled={disabled || incorrectNetwork}
-          >
-            {isLoading && (
-              <span>
-                <Loader className="small btn-loader" />
-                {loadingText}
-              </span>
-            )}
-
-            {!isLoading && <span>{children}</span>}
-          </button>
-          {incorrectNetwork && (
-            <small className="form-text loader-button-network-help">
-              Please choose the{' '}
-              <strong>{network === 'Home' ? config.homeNetworkName : config.nodeName}</strong>{' '}
-              network with your Web3 Provider.
-            </small>
+    {({ state: { isCorrectNetwork } }) => (
+      <span>
+        <button
+          className={className}
+          formNoValidate={formNoValidate}
+          type={type}
+          disabled={disabled || !isCorrectNetwork}
+        >
+          {isLoading && (
+            <span>
+              <Loader className="small btn-loader" />
+              {loadingText}
+            </span>
           )}
-        </span>
-      );
-    }}
+
+          {!isLoading && <span>{children}</span>}
+        </button>
+        {!isCorrectNetwork && (
+          <small className="form-text loader-button-network-help">
+            Please choose the{' '}
+            <strong>{network === 'Home' ? config.networkName : config.networkName}</strong> network
+            with your Web3 Provider.
+          </small>
+        )}
+      </span>
+    )}
   </Web3Consumer>
 );
 

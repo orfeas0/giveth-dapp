@@ -35,7 +35,7 @@ function updateExistingDonation(donation, amount, status) {
 }
 
 /**
- * Create an allowance for the givethBridge contract to transfer the provided token address
+ * Create an allowance for the liquidPledging contract to transfer the provided token address
  * on behalf of the provided user
  *
  * @param {string} tokenContractAddress Address of the token to create an allowance on
@@ -49,7 +49,7 @@ const createAllowance = async (tokenContractAddress, tokenHolderAddress, amount)
   let txHash;
   try {
     return ERC20.methods
-      .approve(config.givethBridgeAddress, amount)
+      .approve(config.liquidPledgingAddress, amount)
       .send({ from: tokenHolderAddress })
       .on('transactionHash', transactionHash => {
         txHash = transactionHash;
@@ -616,12 +616,12 @@ class DonationService {
     const network = await getNetwork();
     const ERC20 = network.tokens[tokenContractAddress];
 
-    // read existing allowance for the givethBridge
+    // read existing allowance for the LP
     const allowance = await ERC20.methods
-      .allowance(tokenHolderAddress, config.givethBridgeAddress)
+      .allowance(tokenHolderAddress, config.liquidPledgingAddress)
       .call();
 
-    // console.log(`Existing ERC20 allowance for address ${tokenHolderAddress}: `, allowance);
+    console.log(`Existing ERC20 allowance for address ${tokenHolderAddress}: `, allowance);
     // if no allowance, we set the allowance
     // if there's an existing allowance, but it's lower than the amount, we reset it and create a new allowance
     // in any other case, just continue

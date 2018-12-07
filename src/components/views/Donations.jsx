@@ -19,7 +19,7 @@ import DonationProvider, {
  */
 const Donations = () => (
   <Web3Consumer>
-    {({ state: { isForeignNetwork, balance } }) => (
+    {({ state: { isCorrectNetwork, balance } }) => (
       <UserConsumer>
         {({ state: { currentUser } }) => (
           <DonationProvider currentUser={currentUser} balance={balance}>
@@ -45,8 +45,8 @@ const Donations = () => (
                         )}
 
                         <NetworkWarning
-                          incorrectNetwork={!isForeignNetwork}
-                          networkName={config.nodeName}
+                          incorrectNetwork={!isCorrectNetwork}
+                          networkName={config.networkName}
                         />
 
                         {isLoading && <Loader className="fixed" />}
@@ -74,7 +74,7 @@ const Donations = () => (
                                       <tr key={d.id} className={d.isPending ? 'pending' : ''}>
                                         {currentUser.authenticated && (
                                           <td className="td-actions">
-                                            {d.canRefund(currentUser, isForeignNetwork) && (
+                                            {d.canRefund(currentUser, isCorrectNetwork) && (
                                               <button
                                                 type="button"
                                                 className="btn btn-sm btn-danger"
@@ -83,7 +83,7 @@ const Donations = () => (
                                                 Refund
                                               </button>
                                             )}
-                                            {d.canApproveReject(currentUser, isForeignNetwork) && (
+                                            {d.canApproveReject(currentUser, isCorrectNetwork) && (
                                               <div>
                                                 <button
                                                   type="button"

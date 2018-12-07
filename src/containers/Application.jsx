@@ -19,7 +19,6 @@ import config from '../configuration';
 
 // views
 import Profile from '../components/views/Profile';
-// import UserWallet from '../components/views/UserWallet';
 import EditProfile from '../components/views/EditProfile';
 
 import ViewMilestone from '../components/views/ViewMilestone';
@@ -124,7 +123,7 @@ class Application extends Component {
         <Router history={history}>
           <Web3Provider onLoaded={this.web3Loaded}>
             <Web3Consumer>
-              {({ state: { account, balance, isForeignNetwork } }) => (
+              {({ state: { account, balance, isCorrectNetwork } }) => (
                 <div>
                   {web3Loading && <Loader className="fixed" />}
                   {!web3Loading && (
@@ -156,7 +155,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -180,7 +179,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -195,7 +194,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -219,7 +218,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -234,7 +233,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -248,7 +247,7 @@ class Application extends Component {
                                             isProposed
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             balance={balance}
                                             {...props}
                                           />
@@ -273,7 +272,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -293,7 +292,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}
@@ -306,7 +305,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             isProposed
                                             {...props}
                                           />
@@ -372,18 +371,6 @@ class Application extends Component {
                                           />
                                         )}
                                       />
-
-                                      {/* <Route
-                                        exact
-                                        path="/wallet"
-                                        render={props => (
-                                          <UserWallet
-                                            currentUser={currentUser}
-                                            // wallet={wallet}
-                                            {...props}
-                                          />
-                                        )}
-                                      /> */}
                                       <Route
                                         exact
                                         path="/profile"
@@ -392,7 +379,7 @@ class Application extends Component {
                                             key={currentUser ? currentUser.id : 0}
                                             currentUser={currentUser}
                                             balance={balance}
-                                            isForeignNetwork={isForeignNetwork}
+                                            isCorrectNetwork={isCorrectNetwork}
                                             {...props}
                                           />
                                         )}

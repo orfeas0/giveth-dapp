@@ -533,6 +533,7 @@ class MyMilestones extends Component {
                   reviewerAddress,
                   ownerAddress, // TODO change this to managerAddress. There is no owner
                   campaignReviewerAddress,
+                  token,
                 } = milestone;
                 const parentProjectId = milestone.campaign.projectId;
                 const from = this.props.currentUser.address;
@@ -556,7 +557,7 @@ class MyMilestones extends Component {
                     campaignReviewerAddress,
                     ownerAddress,
                     maxAmount,
-                    Object.values(config.tokenAddresses)[0], // TODO make this a form param
+                    token.address,
                     5 * 24 * 60 * 60, // 5 days in seconds
                     { from, $extraGas: extraGas() },
                   )
@@ -949,7 +950,7 @@ class MyMilestones extends Component {
 
     return (
       <Web3Consumer>
-        {({ state: { isForeignNetwork } }) => (
+        {({ state: { isCorrectNetwork } }) => (
           <div id="milestones-view">
             <div className="container-fluid page-layout dashboard-table-view">
               <div className="row">
@@ -957,8 +958,8 @@ class MyMilestones extends Component {
                   <h1>Your milestones</h1>
 
                   <NetworkWarning
-                    incorrectNetwork={!isForeignNetwork}
-                    networkName={config.nodeName}
+                    incorrectNetwork={!isCorrectNetwork}
+                    networkName={config.networkName}
                   />
 
                   <ul className="nav nav-tabs">
@@ -1008,7 +1009,7 @@ class MyMilestones extends Component {
                                         {/* Campaign and Milestone managers can edit milestone */}
                                         {(m.ownerAddress === currentUser.address ||
                                           m.campaign.ownerAddress === currentUser.address) &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           [
                                             'Proposed',
                                             'Rejected',
@@ -1026,7 +1027,7 @@ class MyMilestones extends Component {
                                           )}
 
                                         {m.campaign.ownerAddress === currentUser.address &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           m.status === 'Proposed' && (
                                             <span>
                                               <button
@@ -1048,7 +1049,7 @@ class MyMilestones extends Component {
                                             </span>
                                           )}
                                         {m.ownerAddress === currentUser.address &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           m.status === 'Rejected' && (
                                             <button
                                               type="button"
@@ -1062,7 +1063,7 @@ class MyMilestones extends Component {
 
                                         {(m.recipientAddress === currentUser.address ||
                                           m.ownerAddress === currentUser.address) &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           m.status === 'InProgress' &&
                                           m.mined && (
                                             <button
@@ -1079,7 +1080,7 @@ class MyMilestones extends Component {
                                         {[m.reviewerAddress, m.ownerAddress].includes(
                                           currentUser.address,
                                         ) &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           ['InProgress', 'NeedReview'].includes(m.status) &&
                                           m.mined && (
                                             <button
@@ -1093,7 +1094,7 @@ class MyMilestones extends Component {
                                           )}
 
                                         {m.ownerAddress === currentUser.address &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           ['Proposed', 'Rejected'].includes(m.status) && (
                                             <span>
                                               <button
@@ -1108,7 +1109,7 @@ class MyMilestones extends Component {
                                           )}
 
                                         {m.reviewerAddress === currentUser.address &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           m.status === 'NeedsReview' &&
                                           m.mined && (
                                             <span>
@@ -1136,7 +1137,7 @@ class MyMilestones extends Component {
                                           currentUser.address,
                                         ) &&
                                           m.status === 'Completed' &&
-                                          isForeignNetwork &&
+                                          isCorrectNetwork &&
                                           m.mined &&
                                           m.peopleCount > 0 && (
                                             <button

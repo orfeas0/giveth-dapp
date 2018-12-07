@@ -82,7 +82,7 @@ class EditMilestone extends Component {
   }
 
   componentDidMount() {
-    checkForeignNetwork(this.props.isForeignNetwork)
+    checkForeignNetwork(this.props.isCorrectNetwork)
       .then(() => this.checkUser())
       .then(() => {
         this.setState({
@@ -429,6 +429,7 @@ class EditMilestone extends Component {
                 maxAmount,
                 token,
               } = constructedModel;
+
               const parentProjectId = this.state.campaignProjectId;
               // TODO  fix this hack
               if (!parentProjectId || parentProjectId === '0') {
@@ -463,7 +464,7 @@ class EditMilestone extends Component {
                   campaignReviewerAddress,
                   from,
                   maxAmount,
-                  token.foreignAddress,
+                  token.address,
                   5 * 24 * 60 * 60, // 5 days in seconds
                   { from, $extraGas: extraGas() },
                 )
@@ -521,6 +522,7 @@ class EditMilestone extends Component {
                 });
             })
             .catch(err => {
+              console.log('err', err);
               if (txHash && err.message && err.message.includes('unknown transaction')) return; // bug in web3 seems to constantly fail due to this error, but the tx is correct
               this.setState({ isSaving: false, isBlocking: true });
               ErrorPopup(
@@ -765,12 +767,13 @@ class EditMilestone extends Component {
                   <div className="form-header">
                     {isNew && !isProposed && <h3>Add a new milestone</h3>}
 
-                    {!isNew && !isProposed && (
-                      <h3>
-                        Edit milestone
-                        {milestone.title}
-                      </h3>
-                    )}
+                    {!isNew &&
+                      !isProposed && (
+                        <h3>
+                          Edit milestone
+                          {milestone.title}
+                        </h3>
+                      )}
 
                     {isNew && isProposed && <h3>Propose a Milestone</h3>}
 
@@ -1071,7 +1074,7 @@ EditMilestone.propTypes = {
   isProposed: PropTypes.bool,
   isNew: PropTypes.bool,
   balance: PropTypes.objectOf(utils.BN).isRequired,
-  isForeignNetwork: PropTypes.bool.isRequired,
+  isCorrectNetwork: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

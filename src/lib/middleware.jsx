@@ -150,15 +150,15 @@ export const checkProfile = async currentUser => {
 /**
  * Check if the user is connected to the foreign network
  */
-export const checkForeignNetwork = async isForeignNetwork => {
+export const checkForeignNetwork = async isCorrectNetwork => {
   // already on correct network
-  if (isForeignNetwork) return;
+  if (isCorrectNetwork) return;
 
   // we block the user b/c MetaMask will reload the page on a network change
   await React.swal({
     title: 'Network Change Required!',
     text: `Please connect to the ${
-      config.nodeName
+      config.networkName
     } network before proceeding. Depending on your provider, the page will be reloaded upon changing the network which may result in loosing data`,
     icon: 'warning',
   });

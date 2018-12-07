@@ -39,7 +39,7 @@ const _getTokenWhitelist = () => {
   const r = React.whitelist.tokenWhitelist;
   return r.map(t => {
     if (t.symbol === 'ETH') {
-      t.name = `${config.homeNetworkName} ETH`;
+      t.name = `${config.networkName} ETH`;
     }
     t.balance = utils.toBN(0);
     return t;
@@ -47,10 +47,6 @@ const _getTokenWhitelist = () => {
 };
 
 Modal.setAppElement('#root');
-
-// tx only requires 25400 gas, but for some reason we get an out of gas
-// error in web3 with that amount (even though the tx succeeds)
-const DONATION_GAS = 30400;
 
 class BaseDonateButton extends React.Component {
   constructor(props) {
@@ -64,7 +60,6 @@ class BaseDonateButton extends React.Component {
       isSaving: false,
       formIsValid: false,
       amount: '',
-      givethBridge: undefined,
       etherscanUrl: '',
       modalVisible: false,
       showCustomAddress: false,
@@ -86,7 +81,7 @@ class BaseDonateButton extends React.Component {
 
   componentDidMount() {
     getNetwork().then(network => {
-      this.setState({ givethBridge: network.givethBridge, etherscanUrl: network.homeEtherscan });
+      this.setState({ etherscanUrl: network.homeEtherscan });
     });
     this.pollToken();
   }
@@ -167,16 +162,16 @@ class BaseDonateButton extends React.Component {
   }
 
   submit(model) {
-    this.donateWithBridge(model);
+    this.donate(model);
     this.setState({ isSaving: true });
   }
 
-  donateWithBridge(model) {
+  donate(model) {
     const { currentUser } = this.props;
     const { adminId } = this.props.model;
-    const { givethBridge, etherscanUrl, showCustomAddress, selectedToken } = this.state;
+    const { etherscanUrl, showCustomAddress, selectedToken } = this.state;
 
-    const value = utils.toWei(model.amount);
+    const amount = utils.toWei(model.amount);
     const isDonationInToken = selectedToken.symbol !== 'ETH';
     const tokenAddress = isDonationInToken ? selectedToken.address : 0;
 
@@ -185,32 +180,40 @@ class BaseDonateButton extends React.Component {
       let donationUser;
       const opts = { from: currentUser.address, $extraGas: extraGas() };
 
-      // actually uses 84766, but runs out of gas if exact
-      if (!isDonationInToken) Object.assign(opts, { value, gas: DONATION_GAS });
+      // actually uses 225710, but runs out of gas if exact
+      // if (isDonationInToken) Object.assign(opts, { gas: 300000 });
+
+      const network = await getNetwork();
 
       if (showCustomAddress) {
         // Donating on behalf of another user or address
         try {
           const user = await feathersClient.service('users').get(model.customAddress);
           if (user && user.giverId > 0) {
-            method = givethBridge.donate(user.giverId, adminId, tokenAddress, value, opts);
+            method = network.liquidPledging.donate(
+              user.giverId,
+              adminId,
+              tokenAddress,
+              amount,
+              opts,
+            );
             donationUser = user;
           } else {
-            givethBridge.donateAndCreateGiver(
+            network.liquidPledging.addGiverAndDonate(
               model.customAddress,
               adminId,
               tokenAddress,
-              value,
+              amount,
               opts,
             );
             donationUser = { address: model.customAddress };
           }
         } catch (e) {
-          givethBridge.donateAndCreateGiver(
+          network.liquidPledging.addGiverAndDonate(
             model.customAddress,
             adminId,
             tokenAddress,
-            value,
+            amount,
             opts,
           );
           donationUser = { address: model.customAddress };
@@ -219,12 +222,18 @@ class BaseDonateButton extends React.Component {
         // Donating on behalf of logged in DApp user
         method =
           currentUser.giverId > 0
-            ? givethBridge.donate(currentUser.giverId, adminId, tokenAddress, value, opts)
-            : givethBridge.donateAndCreateGiver(
-                currentUser.address,
+            ? network.liquidPledging.donate(
+                currentUser.giverId,
                 adminId,
                 tokenAddress,
-                value,
+                amount,
+                opts,
+              )
+            : network.liquidPledging.addGiverAndDonate(
+                adminId,
+                currentUser.address,
+                tokenAddress,
+                amount,
                 opts,
               );
         donationUser = currentUser;
@@ -238,7 +247,7 @@ class BaseDonateButton extends React.Component {
           await DonationService.newFeathersDonation(
             donationUser,
             this.props.model,
-            value,
+            amount,
             selectedToken,
             txHash,
           );
@@ -294,9 +303,9 @@ class BaseDonateButton extends React.Component {
         });
     };
 
-    // if donating in token, first approve transfer of token by bridge
+    // if donating in token, first approve transfer of token by LiquidPledging by creating an allowance
     if (isDonationInToken) {
-      DonationService.approveERC20tokenTransfer(tokenAddress, currentUser.address, value)
+      DonationService.approveERC20tokenTransfer(tokenAddress, currentUser.address, amount)
         .then(() => _makeDonationTx())
         .catch(err => {
           this.setState({
@@ -375,7 +384,7 @@ class BaseDonateButton extends React.Component {
             {validProvider && (
               <NetworkWarning
                 incorrectNetwork={!isCorrectNetwork}
-                networkName={config.homeNetworkName}
+                networkName={config.networkName}
               />
             )}
             {isCorrectNetwork &&
@@ -411,7 +420,7 @@ class BaseDonateButton extends React.Component {
                     />
                   )}
                   {/* TODO: remove this b/c the wallet provider will contain this info */}
-                  {config.homeNetworkName} {selectedToken.symbol} balance:&nbsp;
+                  {config.networkName} {selectedToken.symbol} balance:&nbsp;
                   <em>{utils.fromWei(balance ? balance.toString() : '')}</em>
                 </div>
               )}

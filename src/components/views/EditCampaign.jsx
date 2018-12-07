@@ -62,7 +62,7 @@ class EditCampaign extends Component {
 
   componentDidMount() {
     this.mounted = true;
-    checkForeignNetwork(this.props.isForeignNetwork)
+    checkForeignNetwork(this.props.isCorrectNetwork)
       .then(() => this.checkUser())
       .then(() => {
         if (!this.state.hasWhitelist) this.getReviewers();
@@ -405,7 +405,7 @@ EditCampaign.propTypes = {
   currentUser: PropTypes.instanceOf(User),
   isNew: PropTypes.bool,
   balance: PropTypes.objectOf(utils.BN).isRequired,
-  isForeignNetwork: PropTypes.bool.isRequired,
+  isCorrectNetwork: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,
