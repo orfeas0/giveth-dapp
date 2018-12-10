@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Avatar from 'react-avatar';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import ReactHtmlParser from 'react-html-parser';
-import { utils } from 'web3';
+import BigNumber from 'bignumber.js';
 
 import { feathersClient } from '../../lib/feathersClient';
 import Loader from '../Loader';
@@ -185,14 +185,15 @@ class ViewCampaign extends Component {
 
                     <div className="milestone-header spacer-top-50 card-view">
                       <h3>Milestones</h3>
-                      {campaign.projectId > 0 && isOwner(campaign.owner.address, currentUser) && (
-                        <Link
-                          className="btn btn-primary btn-sm pull-right"
-                          to={`/campaigns/${campaign.id}/milestones/new`}
-                        >
-                          Add Milestone
-                        </Link>
-                      )}
+                      {campaign.projectId > 0 &&
+                        isOwner(campaign.owner.address, currentUser) && (
+                          <Link
+                            className="btn btn-primary btn-sm pull-right"
+                            to={`/campaigns/${campaign.id}/milestones/new`}
+                          >
+                            Add Milestone
+                          </Link>
+                        )}
 
                       {campaign.projectId > 0 &&
                         !isOwner(campaign.owner.address, currentUser) &&
@@ -205,9 +206,8 @@ class ViewCampaign extends Component {
                           </Link>
                         )}
 
-                      {isLoadingMilestones && milestonesTotal === 0 && (
-                        <Loader className="relative" />
-                      )}
+                      {isLoadingMilestones &&
+                        milestonesTotal === 0 && <Loader className="relative" />}
                       <ResponsiveMasonry
                         columnsCountBreakPoints={{
                           0: 1,
@@ -271,11 +271,12 @@ class ViewCampaign extends Component {
                 <div className="row spacer-top-50 spacer-bottom-50">
                   <div className="col-md-8 m-auto">
                     <h4>Campaign Reviewer</h4>
-                    {campaign && campaign.reviewer && (
-                      <Link to={`/profile/${campaign.reviewer.address}`}>
-                        {getUserName(campaign.reviewer)}
-                      </Link>
-                    )}
+                    {campaign &&
+                      campaign.reviewer && (
+                        <Link to={`/profile/${campaign.reviewer.address}`}>
+                          {getUserName(campaign.reviewer)}
+                        </Link>
+                      )}
                     {(!campaign || !campaign.reviewer) && <span>Unknown user</span>}
                   </div>
                 </div>
@@ -299,7 +300,7 @@ ViewCampaign.propTypes = {
       id: PropTypes.string,
     }).isRequired,
   }).isRequired,
-  balance: PropTypes.objectOf(utils.BN).isRequired,
+  balance: PropTypes.instanceOf(BigNumber).isRequired,
 };
 
 ViewCampaign.defaultProps = {

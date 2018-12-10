@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import BigNumber from 'bignumber.js';
 import PropTypes from 'prop-types';
-import { utils } from 'web3';
 
 import { Link } from 'react-router-dom';
 import Avatar from 'react-avatar';
@@ -136,18 +136,19 @@ class ViewDAC extends Component {
                     </p>
                     {isLoadingCampaigns && <Loader className="small" />}
 
-                    {campaigns.length > 0 && !isLoadingCampaigns && (
-                      <div className="cards-grid-container">
-                        {campaigns.map(c => (
-                          <CampaignCard
-                            key={c.id}
-                            campaign={c}
-                            history={history}
-                            balance={balance}
-                          />
-                        ))}
-                      </div>
-                    )}
+                    {campaigns.length > 0 &&
+                      !isLoadingCampaigns && (
+                        <div className="cards-grid-container">
+                          {campaigns.map(c => (
+                            <CampaignCard
+                              key={c.id}
+                              campaign={c}
+                              history={history}
+                              balance={balance}
+                            />
+                          ))}
+                        </div>
+                      )}
                   </div>
                 </div>
               )}
@@ -188,7 +189,7 @@ ViewDAC.propTypes = {
       id: PropTypes.string,
     }).isRequired,
   }).isRequired,
-  balance: PropTypes.objectOf(utils.BN).isRequired,
+  balance: PropTypes.instanceOf(BigNumber).isRequired,
 };
 
 ViewDAC.defaultProps = {

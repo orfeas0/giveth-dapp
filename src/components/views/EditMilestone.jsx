@@ -1,3 +1,4 @@
+/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import { Prompt } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -7,9 +8,7 @@ import BigNumber from 'bignumber.js';
 import { Form, Input } from 'formsy-react-components';
 import GA from 'lib/GoogleAnalytics';
 import Milestone from 'models/Milestone';
-import MilestoneItem from 'models/MilestoneItem';
 import { feathersClient, feathersRest } from '../../lib/feathersClient';
-import templates from '../../lib/milestoneTemplates';
 import Loader from '../Loader';
 import QuillFormsy from '../QuillFormsy';
 import SelectFormsy from '../SelectFormsy';
@@ -28,11 +27,14 @@ import getNetwork from '../../lib/blockchain/getNetwork';
 import extraGas from '../../lib/blockchain/extraGas';
 import LoaderButton from '../LoaderButton';
 import User from '../../models/User';
+import templates from '../../lib/milestoneTemplates';
 
 import ErrorPopup from '../ErrorPopup';
 import MilestoneProof from '../MilestoneProof';
 
 import getEthConversionContext from '../../containers/getEthConversionContext';
+import MilestoneService from '../../services/MilestoneService';
+import CampaignService from '../../services/CampaignService';
 
 BigNumber.config({ DECIMAL_PLACES: 18 });
 
@@ -91,16 +93,8 @@ class EditMilestone extends Component {
 
         // load a single milestones (when editing)
         if (!this.props.isNew) {
-          feathersClient
-            .service('milestones')
-            .find({ query: { _id: this.props.match.params.milestoneId } })
-            .then(resp => {
-              const milestone = resp.data[0];
-              const date = getStartOfDayUTC(milestone.date);
-              // convert amounts to BigNumbers
-              milestone.maxAmount = new BigNumber(utils.fromWei(milestone.maxAmount).toString());
-              milestone.fiatAmount = new BigNumber(milestone.fiatAmount);
-
+          MilestoneService.get(this.props.match.params.milestoneId)
+            .then(milestone => {
               if (
                 !(
                   isOwner(milestone.owner.address, this.props.currentUser) ||
@@ -110,34 +104,15 @@ class EditMilestone extends Component {
                 this.props.history.goBack();
               }
               this.setState({
-                milestone: new Milestone({
-                  title: milestone.title,
-                  description: milestone.description,
-                  image: milestone.image,
-                  id: this.props.match.params.milestoneId,
-                  maxAmount: milestone.maxAmount,
-                  selectedFiatType: milestone.selectedFiatType,
-                  fiatAmount: milestone.fiatAmount,
-                  recipientAddress: milestone.recipientAddress,
-                  status: milestone.status,
-                  projectId: milestone.campaignId,
-                  reviewerAddress: milestone.reviewerAddress,
-                  items: milestone.items.map(i => new MilestoneItem(i)),
-                  itemizeState: milestone.items && milestone.items.length > 0,
-                  date,
-                  token: milestone.token,
-                }),
-                campaignId: milestone.campaign._id,
+                milestone,
                 campaignTitle: milestone.campaign.title,
                 campaignProjectId: milestone.campaign.projectId,
                 campaignReviewerAddress: milestone.campaign.reviewerAddress,
               });
 
-              return { date, milestone };
+              return milestone;
             })
-            .then(({ date, milestone }) =>
-              this.props.getEthConversion(date, milestone.token.symbol),
-            )
+            .then(milestone => this.props.getEthConversion(milestone.date, milestone.token.symbol))
             .then(() => {
               if (!this.state.hasWhitelist) this.getReviewers();
             })
@@ -153,9 +128,7 @@ class EditMilestone extends Component {
               );
             });
         } else {
-          feathersClient
-            .service('campaigns')
-            .get(this.props.match.params.id)
+          CampaignService.get(this.props.match.params.id)
             .then(campaign => {
               if (campaign.projectId < 0) {
                 this.props.history.goBack();
@@ -291,6 +264,28 @@ class EditMilestone extends Component {
       milestone.fiatAmount = fiatAmount;
 
       this.setState({ milestone });
+    }
+  }
+
+  changeSelectedFiat(fiatType) {
+    const { milestone } = this.state;
+    const conversionRate = this.props.currentRate.rates[fiatType];
+    const maxAmount = milestone.fiatAmount.div(conversionRate);
+
+    milestone.maxAmount = maxAmount;
+    milestone.fiatAmount = maxAmount.times(conversionRate);
+    milestone.selectedFiatType = fiatType;
+
+    this.setState({ milestone });
+  }
+
+  toggleFormValid(formState) {
+    if (this.state.milestone.itemizeState) {
+      this.setState(prevState => ({
+        formIsValid: formState && prevState.milestone.items.length > 0,
+      }));
+    } else {
+      this.setState({ formIsValid: formState });
     }
   }
 
@@ -632,28 +627,6 @@ class EditMilestone extends Component {
     );
   }
 
-  toggleFormValid(formState) {
-    if (this.state.milestone.itemizeState) {
-      this.setState(prevState => ({
-        formIsValid: formState && prevState.milestone.items.length > 0,
-      }));
-    } else {
-      this.setState({ formIsValid: formState });
-    }
-  }
-
-  changeSelectedFiat(fiatType) {
-    const { milestone } = this.state;
-    const conversionRate = this.props.currentRate.rates[fiatType];
-    const maxAmount = milestone.fiatAmount.div(conversionRate);
-
-    milestone.maxAmount = maxAmount;
-    milestone.fiatAmount = maxAmount.times(conversionRate);
-    milestone.selectedFiatType = fiatType;
-
-    this.setState({ milestone });
-  }
-
   mapInputs(inputs) {
     const { milestone } = this.state;
 
@@ -678,7 +651,6 @@ class EditMilestone extends Component {
     if (this.props.isNew) {
       return this.props.isProposed ? 'Propose Milestone' : 'Create Milestone';
     }
-
     return 'Update Milestone';
   }
 
@@ -916,7 +888,7 @@ class EditMilestone extends Component {
                           isEtherAddress: 'Please insert a valid Ethereum address.',
                         }}
                         required
-                        disabled={milestone.projectId}
+                        disabled={milestone.projectId !== undefined}
                       />
                     </div>
 
@@ -962,7 +934,7 @@ class EditMilestone extends Component {
                                   isMoment: 'Please provide a date.',
                                 }}
                                 required={!milestone.itemizeState}
-                                disabled={milestone.projectId}
+                                disabled={milestone.projectId !== undefined}
                               />
                             </div>
                           </div>
@@ -976,13 +948,13 @@ class EditMilestone extends Component {
                                 type="number"
                                 step="any"
                                 label="Maximum amount in fiat"
-                                value={milestone.fiatAmount.toNumber()}
+                                value={milestone.fiatAmount.toString()}
                                 placeholder="10"
                                 validations="greaterThan:0"
                                 validationErrors={{
                                   greaterEqualTo: 'Minimum value must be greater than 0',
                                 }}
-                                disabled={milestone.projectId}
+                                disabled={milestone.projectId !== undefined}
                                 onChange={this.setMaxAmount}
                               />
                             </div>
@@ -997,7 +969,7 @@ class EditMilestone extends Component {
                                 helpText={`1 ${milestone.token.symbol} = ${
                                   currentRate.rates[milestone.selectedFiatType]
                                 } ${milestone.selectedFiatType}`}
-                                disabled={milestone.projectId}
+                                disabled={milestone.projectId !== undefined}
                                 required
                               />
                             </div>
@@ -1010,14 +982,14 @@ class EditMilestone extends Component {
                                 type="number"
                                 step="any"
                                 label={`Maximum amount in ${milestone.token.name}`}
-                                value={milestone.maxAmount}
+                                value={milestone.maxAmount.toString()}
                                 placeholder="10"
                                 validations="greaterThan:0"
                                 validationErrors={{
                                   greaterEqualTo: 'Minimum value must be greater than 0',
                                 }}
                                 required
-                                disabled={milestone.projectId}
+                                disabled={milestone.projectId !== undefined}
                                 onChange={this.setFiatAmount}
                               />
                             </div>
@@ -1073,7 +1045,7 @@ EditMilestone.propTypes = {
   }).isRequired,
   isProposed: PropTypes.bool,
   isNew: PropTypes.bool,
-  balance: PropTypes.objectOf(utils.BN).isRequired,
+  balance: PropTypes.instanceOf(BigNumber).isRequired,
   isCorrectNetwork: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
