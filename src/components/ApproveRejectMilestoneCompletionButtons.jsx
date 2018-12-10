@@ -166,7 +166,7 @@ class ApproveRejectMilestoneCompletionButtons extends Component {
 
     return (
       <Web3Consumer>
-        {({ state: { isForeignNetwork } }) => (
+        {({ state: { isCorrectNetwork } }) => (
           <Fragment>
             {milestone.reviewer.address === currentUser.address &&
               milestone.status === 'NeedsReview' &&
@@ -176,7 +176,7 @@ class ApproveRejectMilestoneCompletionButtons extends Component {
                     type="button"
                     className="btn btn-success btn-sm"
                     onClick={() => this.approveMilestoneCompleted()}
-                    disabled={!isForeignNetwork}
+                    disabled={!isCorrectNetwork}
                   >
                     <i className="fa fa-thumbs-up" />
                     &nbsp;Approve
@@ -186,7 +186,7 @@ class ApproveRejectMilestoneCompletionButtons extends Component {
                     type="button"
                     className="btn btn-danger btn-sm"
                     onClick={() => this.rejectMilestoneCompleted()}
-                    disabled={!isForeignNetwork}
+                    disabled={!isCorrectNetwork}
                   >
                     <i className="fa fa-thumbs-down" />
                     &nbsp;Reject

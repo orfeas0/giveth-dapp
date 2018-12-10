@@ -286,9 +286,6 @@ class BaseDonateButton extends React.Component {
             <p>
               Woot! Woot! Donation received. You are awesome!
               <br />
-              Note: because we are bridging networks, there will be a delay before your donation
-              appears.
-              <br />
               <a href={`${etherscanUrl}tx/${txHash}`} target="_blank" rel="noopener noreferrer">
                 View transaction
               </a>

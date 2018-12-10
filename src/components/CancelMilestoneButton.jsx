@@ -90,7 +90,7 @@ class CancelMilestoneButton extends Component {
 
     return (
       <Web3Consumer>
-        {({ state: { isForeignNetwork } }) => (
+        {({ state: { isCorrectNetwork } }) => (
           <Fragment>
             {[
               milestone.reviewerAddress,
@@ -103,7 +103,7 @@ class CancelMilestoneButton extends Component {
                   type="button"
                   className="btn btn-danger btn-sm"
                   onClick={() => this.cancelMilestone()}
-                  disabled={!isForeignNetwork}
+                  disabled={!isCorrectNetwork}
                 >
                   <i className="fa fa-times" />
                   &nbsp;Cancel

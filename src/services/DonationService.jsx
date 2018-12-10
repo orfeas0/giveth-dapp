@@ -754,7 +754,7 @@ class DonationService {
   }
 
   static getMilestoneDonations(milestoneId) {
-    feathersClient
+    return feathersClient
       .service('/donations')
       .find({
         query: {
@@ -772,11 +772,13 @@ class DonationService {
           const pledge = pledges.find(n => n.id === donation.pledgeId);
 
           if (pledge) {
-            pledge.amount = pledge.amount.add(new BigNumber(donation.amountRemaining));
+            pledge.amount = new BigNumber(utils.fromWei(pledge.amount)).add(
+              new BigNumber(utils.fromWei(donation.amountRemaining)),
+            );
           } else {
             pledges.push({
               id: donation.pledgeId,
-              amount: new BigNumber(donation.amountRemaining),
+              amount: new BigNumber(utils.fromWei(donation.amountRemaining)),
             });
           }
         });

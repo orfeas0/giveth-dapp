@@ -557,7 +557,7 @@ class MilestoneService {
         return cappedMilestone
           .mWithdraw(donations, {
             from,
-            $extraGas: extraGas(),
+            $extraGas: 4000000, // extraGas(),
           })
           .once('transactionHash', hash => {
             txHash = hash;

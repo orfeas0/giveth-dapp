@@ -90,7 +90,7 @@ class RequestMarkMilestoneCompleteButton extends Component {
 
     return (
       <Web3Consumer>
-        {({ state: { isForeignNetwork } }) => (
+        {({ state: { isCorrectNetwork } }) => (
           <Fragment>
             {(milestone.recipient.address === currentUser.address ||
               milestone.ownerAddress === currentUser.address) &&
@@ -100,7 +100,7 @@ class RequestMarkMilestoneCompleteButton extends Component {
                   type="button"
                   className="btn btn-success btn-sm"
                   onClick={() => this.requestMarkComplete()}
-                  disabled={!(milestone.currentBalance || '0').gt('0') || !isForeignNetwork}
+                  disabled={!(milestone.currentBalance || '0').gt('0') || !isCorrectNetwork}
                 >
                   Mark complete
                 </button>
