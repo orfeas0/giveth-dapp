@@ -10,18 +10,19 @@ import BigNumber from 'bignumber.js';
 
 import User from 'models/User';
 import Campaign from 'models/Campaign';
-import MilestoneActions from 'components/MilestoneActions';
 
-import BackgroundImageHeader from 'components/BackgroundImageHeader';
-import DonateButton from 'components/DonateButton';
-import ErrorPopup from 'components/ErrorPopup';
-import GoBackButton from 'components/GoBackButton';
-import ShowTypeDonations from 'components/ShowTypeDonations';
-import Loader from 'components/Loader';
-import MilestoneItem from 'components/MilestoneItem';
-import MilestoneConversations from 'components/MilestoneConversations';
-import DelegateMultipleButton from 'components/DelegateMultipleButton';
+import MilestoneActions from 'components/MilestoneActions';
 import { getUserAvatar, getUserName } from '../../lib/helpers';
+
+import BackgroundImageHeader from '../BackgroundImageHeader';
+import DonateButton from '../DonateButton';
+import ErrorPopup from '../ErrorPopup';
+import GoBackButton from '../GoBackButton';
+import ListDonations from '../ListDonations';
+import Loader from '../Loader';
+import MilestoneItem from '../MilestoneItem';
+import MilestoneConversations from '../MilestoneConversations';
+import DelegateMultipleButton from '../DelegateMultipleButton';
 
 import MilestoneService from '../../services/MilestoneService';
 
@@ -339,8 +340,7 @@ class ViewMilestone extends Component {
 
               <div className="row spacer-top-50 spacer-bottom-50">
                 <div className="col-md-8 m-auto">
-                  <h4>Donations</h4>
-                  <ShowTypeDonations donations={donations} isLoading={isLoadingDonations} />
+                  <ListDonations donations={donations} isLoading={isLoadingDonations} />
                   {this.isActiveMilestone() && (
                     <DonateButton
                       model={{

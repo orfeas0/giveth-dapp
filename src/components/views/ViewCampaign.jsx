@@ -6,6 +6,7 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import ReactHtmlParser from 'react-html-parser';
 import BigNumber from 'bignumber.js';
 
+import Balances from 'components/Balances';
 import { feathersClient } from '../../lib/feathersClient';
 import Loader from '../Loader';
 import MilestoneCard from '../MilestoneCard';
@@ -16,7 +17,7 @@ import BackgroundImageHeader from '../BackgroundImageHeader';
 import DonateButton from '../DonateButton';
 import CommunityButton from '../CommunityButton';
 import DelegateMultipleButton from '../DelegateMultipleButton';
-import ShowTypeDonations from '../ShowTypeDonations';
+import ListDonations from '../ListDonations';
 
 import User from '../../models/User';
 import Campaign from '../../models/Campaign';
@@ -253,8 +254,9 @@ class ViewCampaign extends Component {
 
                 <div className="row spacer-top-50 spacer-bottom-50">
                   <div className="col-md-8 m-auto">
-                    <h4>Donations</h4>
-                    <ShowTypeDonations donations={donations} isLoading={isLoadingDonations} />
+                    <Balances entity={campaign} />
+
+                    <ListDonations donations={donations} isLoading={isLoadingDonations} />
                     <DonateButton
                       model={{
                         type: Campaign.type,

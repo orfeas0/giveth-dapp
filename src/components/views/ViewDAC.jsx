@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 import Avatar from 'react-avatar';
 import ReactHtmlParser from 'react-html-parser';
 
+import Balances from 'components/Balances';
 import Loader from '../Loader';
 import GoBackButton from '../GoBackButton';
 import BackgroundImageHeader from '../BackgroundImageHeader';
 import DonateButton from '../DonateButton';
-import ShowTypeDonations from '../ShowTypeDonations';
+import ListDonations from '../ListDonations';
 import CommunityButton from '../CommunityButton';
 import User from '../../models/User';
 import DAC from '../../models/DAC';
@@ -155,8 +156,9 @@ class ViewDAC extends Component {
 
               <div className="row spacer-top-50 spacer-bottom-50">
                 <div className="col-md-8 m-auto">
-                  <h4>Donations</h4>
-                  <ShowTypeDonations donations={donations} isLoading={isLoadingDonations} />
+                  <Balances entity={dac} />
+
+                  <ListDonations donations={donations} isLoading={isLoadingDonations} />
                   <DonateButton
                     model={{
                       type: DAC.type,
