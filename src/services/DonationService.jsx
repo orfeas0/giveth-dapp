@@ -772,16 +772,18 @@ class DonationService {
           const pledge = pledges.find(n => n.id === donation.pledgeId);
 
           if (pledge) {
-            pledge.amount = new BigNumber(utils.fromWei(pledge.amount)).add(
+            pledge.amount = new BigNumber(pledge.amount).add(
               new BigNumber(utils.fromWei(donation.amountRemaining)),
             );
           } else {
             pledges.push({
               id: donation.pledgeId,
-              amount: new BigNumber(utils.fromWei(donation.amountRemaining)),
+              amount: new BigNumber(donation.amountRemaining),
             });
           }
         });
+
+        console.log('pledges', pledges);
 
         return pledges.map(
           pledge =>
