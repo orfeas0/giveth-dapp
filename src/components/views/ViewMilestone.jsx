@@ -100,6 +100,8 @@ class ViewMilestone extends Component {
     const { history, currentUser, balance } = this.props;
     const { isLoading, donations, isLoadingDonations, campaign, milestone, recipient } = this.state;
 
+    const getMaxDonation = () => milestone.maxAmount.minus(milestone.currentBalance);
+
     return (
       <div id="view-milestone-view">
         {isLoading && <Loader className="fixed" />}
@@ -132,6 +134,7 @@ class ViewMilestone extends Component {
                         adminId: milestone.projectId,
                         campaignId: campaign._id,
                         token: milestone.token,
+                        maxDonation: getMaxDonation(),
                       }}
                       currentUser={currentUser}
                       history={history}
@@ -350,6 +353,7 @@ class ViewMilestone extends Component {
                         adminId: milestone.projectId,
                         campaignId: campaign._id,
                         token: milestone.token,
+                        maxDonation: getMaxDonation(),
                       }}
                       currentUser={currentUser}
                       history={history}

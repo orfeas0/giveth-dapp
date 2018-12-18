@@ -330,14 +330,7 @@ class BaseDonateButton extends React.Component {
   }
 
   render() {
-    const {
-      model,
-      currentUser,
-      ETHBalance,
-      validProvider,
-      maxAmount,
-      isCorrectNetwork,
-    } = this.props;
+    const { model, currentUser, ETHBalance, validProvider, isCorrectNetwork } = this.props;
     const {
       amount,
       formIsValid,
@@ -360,9 +353,9 @@ class BaseDonateButton extends React.Component {
       // set max donation amount user wallet's balance
       const _balance = new BigNumber(utils.fromWei(balance.toString()));
       let _maxAmount = _balance;
-      // if milestone max amount < balance, set it to maxAmount
-      if (selectedToken.balance.lt(_balance)) _maxAmount = maxAmount;
 
+      // if milestone max amount < balance, set it to maxAmount
+      if (model.maxDonation && model.maxDonation.lt(_maxAmount)) _maxAmount = model.maxDonation;
       return _maxAmount;
     };
 
@@ -562,7 +555,7 @@ class BaseDonateButton extends React.Component {
   }
 }
 
-const DonateButton = ({ model, currentUser, maxAmount }) => (
+const DonateButton = ({ model, currentUser }) => (
   <Web3Consumer>
     {({ state: { isCorrectNetwork, validProvider, balance } }) => (
       <BaseDonateButton
@@ -571,7 +564,6 @@ const DonateButton = ({ model, currentUser, maxAmount }) => (
         isCorrectNetwork={isCorrectNetwork}
         model={model}
         currentUser={currentUser}
-        maxAmount={maxAmount}
       />
     )}
   </Web3Consumer>
@@ -584,12 +576,12 @@ const modelTypes = PropTypes.shape({
   title: PropTypes.string.isRequired,
   campaignId: PropTypes.string,
   token: PropTypes.shape({}),
+  maxDonation: PropTypes.instanceOf(BigNumber),
 });
 
 DonateButton.propTypes = {
   model: modelTypes.isRequired,
   currentUser: PropTypes.instanceOf(User),
-  maxAmount: PropTypes.instanceOf(BigNumber),
 };
 
 // eslint isn't smart enough to be able to use Object.assign({}, DonateButton.propTypes, {...})
@@ -597,7 +589,6 @@ DonateButton.propTypes = {
 BaseDonateButton.propTypes = {
   model: modelTypes.isRequired,
   currentUser: PropTypes.instanceOf(User),
-  maxAmount: PropTypes.instanceOf(BigNumber),
   ETHBalance: PropTypes.instanceOf(BigNumber).isRequired,
   validProvider: PropTypes.bool.isRequired,
   isCorrectNetwork: PropTypes.bool.isRequired,
@@ -605,12 +596,10 @@ BaseDonateButton.propTypes = {
 
 DonateButton.defaultProps = {
   currentUser: undefined,
-  maxAmount: new BigNumber(10000000000000000),
 };
 
 BaseDonateButton.defaultProps = {
   currentUser: undefined,
-  maxAmount: new BigNumber(10000000000000000),
 };
 
 export default DonateButton;
