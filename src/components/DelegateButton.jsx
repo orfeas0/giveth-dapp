@@ -67,12 +67,10 @@ class DelegateButton extends Component {
     let maxAmount = this.props.donation.amountRemaining;
 
     if (admin && admin instanceof Milestone) {
-      const maxDelegationAmount = new BigNumber(utils.fromWei(admin.maxAmount)).minus(
-        new BigNumber(utils.fromWei(admin.currentBalance)),
-      );
+      const maxDelegationAmount = admin.maxAmount.minus(admin.currentBalance);
 
-      if (maxDelegationAmount.lt(new BigNumber(utils.fromWei(this.props.donation.amountRemaining))))
-        maxAmount = maxDelegationAmount.toString();
+      if (maxDelegationAmount.lt(this.props.donation.amountRemaining))
+        maxAmount = maxDelegationAmount;
     }
 
     this.setState({
@@ -83,7 +81,6 @@ class DelegateButton extends Component {
   }
 
   submit(model) {
-    const { toBN } = utils;
     const { donation } = this.props;
     this.setState({ isSaving: true });
 
@@ -91,7 +88,10 @@ class DelegateButton extends Component {
     const admin = this.props.types.find(t => t._id === this.state.objectsToDelegateTo[0]);
 
     // TODO: find a more friendly way to do this.
-    if (admin instanceof Milestone && toBN(admin.maxAmount).lt(toBN(admin.currentBalance || 0))) {
+    if (
+      admin instanceof Milestone &&
+      admin.maxAmount.lt(admin.currentBalance || new BigNumber('0'))
+    ) {
       React.toast.error('That milestone has reached its funding goal. Please pick another.');
       return;
     }
