@@ -16,8 +16,8 @@ const configurations = {
   localhost: {
     title: 'RSK Ganache',
     liquidPledgingAddress: '0x46579394802b5e4d2C0647436BFcc71A2d9E8478',
-    lppCampaignFactoryAddress: '0x743DC1A12911e3FeEAe76344A465fF480466400e',
-    lppCappedMilestoneFactoryAddress: '0xf810f023A14A26d89A26430DeB972baFE6d88a58',
+    lppCampaignFactoryAddress: '0xe3155F7A49897e7860476b5A625B258ebe43cA98',
+    lppCappedMilestoneFactoryAddress: '0x1b6E4a9eB8264E46784a782c87e3529E203425Ca',
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://localhost:3030',
     nodeConnection: 'http://localhost:8548',
