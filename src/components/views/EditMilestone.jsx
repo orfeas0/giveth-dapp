@@ -279,7 +279,11 @@ class EditMilestone extends Component {
 
     return authenticateIfPossible(this.props.currentUser)
       .then(() => {
-        if (!this.props.isProposed && !this.props.isCampaignManager(this.props.currentUser)) {
+        if (
+          this.props.isNew &&
+          !this.props.isProposed &&
+          !this.props.isCampaignManager(this.props.currentUser)
+        ) {
           throw new Error('not whitelisted');
         }
       })

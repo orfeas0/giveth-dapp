@@ -15,9 +15,11 @@ class EditMilestoneButton extends Component {
     checkBalance(balance)
       .then(() => {
         if (['Proposed', 'Rejected'].includes(milestone.status)) {
-          history.push(`/milestones/${milestone._id}/edit/proposed`);
+          history.push(
+            `/campaigns/${milestone.campaignId}/milestones/${milestone._id}/edit/proposed`,
+          );
         } else {
-          history.push(`/milestones/${milestone._id}/edit`);
+          history.push(`/campaigns/${milestone.campaignId}/milestones/${milestone._id}/edit`);
         }
       })
       .catch(err => {
