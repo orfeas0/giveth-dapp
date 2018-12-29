@@ -342,8 +342,7 @@ class DonateButton extends React.Component {
             {!validProvider && (
               <div className="alert alert-warning">
                 <i className="fa fa-exclamation-triangle" />
-                It is recommended that you install <a href="https://metamask.io/">MetaMask</a> to
-                donate
+                Please install <a href="https://metamask.io/">MetaMask</a> to donate
               </div>
             )}
 
