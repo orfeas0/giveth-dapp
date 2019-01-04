@@ -19,6 +19,7 @@ import { getUserName, getUserAvatar } from '../../lib/helpers';
 import DelegationProvider, {
   Consumer as DelegationConsumer,
 } from '../../contextProviders/DelegationProvider';
+import Donation from '../../models/Donation';
 
 /**
  * The my delegations view
@@ -81,6 +82,7 @@ const Delegations = ({ balance, currentUser }) => (
                                     to campaigns and milestones */}
                                           {(d.delegateId > 0 ||
                                             d.ownerTypeId === currentUser.address) &&
+                                            d.status === Donation.WAITING &&
                                             isCorrectNetwork &&
                                             d.amountRemaining > 0 && (
                                               <DelegateButton
@@ -101,6 +103,7 @@ const Delegations = ({ balance, currentUser }) => (
                                           {/* When donated to a campaign, only allow delegation
                                     to milestones of that campaign */}
                                           {d.ownerType === 'campaign' &&
+                                            d.status === Donation.COMMITTED &&
                                             isCorrectNetwork &&
                                             d.amountRemaining > 0 && (
                                               <DelegateButton
