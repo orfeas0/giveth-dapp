@@ -158,6 +158,8 @@ class Donation extends Model {
         return 'canceled';
       case Donation.REJECTED:
         return 'rejected';
+      case Donation.FAILED:
+        return 'failed';
       default:
         return 'unknown';
     }
