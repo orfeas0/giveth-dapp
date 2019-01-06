@@ -11,6 +11,7 @@ const {
   REACT_APP_BUGS_EMAIL = 'bugs@giveth.io',
   REACT_APP_DEFAULT_GASPRICE = 10,
   REACT_APP_NETWORK_NAME,
+  REACT_APP_NATIVE_TOKEN_NAME = 'ETH',
 } = process.env;
 
 const configurations = {
@@ -40,13 +41,14 @@ const configurations = {
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://18.130.79.53:3031',
     nodeConnection: 'https://rinkeby.infura.io',
-    networkName: 'Home Ganache',
+    networkName: 'RSK Testnet',
     sendErrors: false,
     analytics: {
       ga_UA: 'UA-103956937-3',
       useGoogleAnalytics: false,
       useHotjar: false,
     },
+    nativeTokenName: 'RBTC',
   },
   develop: {
     title: 'develop',
@@ -128,6 +130,7 @@ config.decimals = REACT_APP_DECIMALS;
 config.bugsEmail = REACT_APP_BUGS_EMAIL;
 config.defaultGasPrice = REACT_APP_DEFAULT_GASPRICE;
 config.networkName = REACT_APP_NETWORK_NAME || config.networkName;
+config.nativeTokenName = REACT_APP_NATIVE_TOKEN_NAME || config.nativeTokenName;
 config.sendErrors = ['develop', 'release', 'beta'].includes(REACT_APP_ENVIRONMENT);
 
 export default config;
