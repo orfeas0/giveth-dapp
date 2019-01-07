@@ -56,7 +56,7 @@ class DelegateButton extends Component {
       .then(() =>
         this.setState({
           modalVisible: true,
-          amount: this.props.donation.amountRemaining.toString(),
+          amount: this.props.donation.amountRemaining.toFixed(),
           maxAmount: this.props.donation.amountRemaining,
         }),
       )
@@ -236,13 +236,13 @@ class DelegateButton extends Component {
                   [maxAmount.toNumber()]: maxAmount.toFixed(),
                 }}
                 tooltip={false}
-                onChange={amount => this.setState({ amount: Number(amount).toFixed(2) })}
+                onChange={amount => this.setState({ amount: amount.toString() })}
               />
             </div>
 
             <div className="form-group">
               <Input
-                type="number"
+                type="text"
                 validations={`greaterThan:0,isNumeric,lessOrEqualTo:${maxAmount.toNumber()}`}
                 validationErrors={{
                   greaterThan: 'Enter value greater than 0',
@@ -251,7 +251,7 @@ class DelegateButton extends Component {
                 }}
                 name="amount"
                 value={this.state.amount}
-                onChange={amount => this.setState({ amount })}
+                onChange={(name, amount) => this.setState({ amount })}
               />
             </div>
 
