@@ -33,15 +33,15 @@ const configurations = {
       useHotjar: false,
     },
   },
-  rsk: {
-    title: 'RSK',
-    liquidPledgingAddress: '0x6aAEB5Bc96E54668e8dc02296554f1901aA12900',
-    lppCampaignFactoryAddress: '0xe340b1ec0034c80E12f95552B10E4f83Eb514064',
-    lppCappedMilestoneFactoryAddress: '0x8696dBC9E10451fA60EBAD176cD540968ba1e87a',
+  rsk_testnet: {
+    title: 'RSK Testnet',
+    liquidPledgingAddress: '0xEa7217d84F0F6EA472Ef50508539ac7aeEe91c50',
+    lppCampaignFactoryAddress: '0x4164C775EA8991C67ae18885699b4711eC24928e',
+    lppCappedMilestoneFactoryAddress: '0xe74f271a319Dfc709850bd7426ceD2857eba85E9',
+    nodeConnection: 'http://68.183.77.54:4343',
+    networkName: 'rsk_testnet',
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
-    feathersConnection: 'http://18.130.79.53:3031',
-    nodeConnection: 'https://rinkeby.infura.io',
-    networkName: 'RSK Testnet',
+    feathersConnection: 'http://68.183.77.54:3030',
     sendErrors: false,
     analytics: {
       ga_UA: 'UA-103956937-3',
@@ -131,6 +131,6 @@ config.bugsEmail = REACT_APP_BUGS_EMAIL;
 config.defaultGasPrice = REACT_APP_DEFAULT_GASPRICE;
 config.networkName = REACT_APP_NETWORK_NAME || config.networkName;
 config.nativeTokenName = REACT_APP_NATIVE_TOKEN_NAME || config.nativeTokenName;
-config.sendErrors = ['develop', 'release', 'beta'].includes(REACT_APP_ENVIRONMENT);
+config.sendErrors = ['develop', 'release', 'beta', 'rsk_testnet'].includes(REACT_APP_ENVIRONMENT);
 
 export default config;
