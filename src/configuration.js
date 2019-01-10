@@ -43,6 +43,7 @@ const configurations = {
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://68.183.77.54:3030',
     sendErrors: false,
+    nodeId: 31,
     analytics: {
       ga_UA: 'UA-103956937-3',
       useGoogleAnalytics: false,
