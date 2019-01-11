@@ -49,7 +49,7 @@ class DonateButton extends React.Component {
     this.state = {
       isSaving: false,
       formIsValid: false,
-      amount: new BigNumber('0'),
+      amount: '0',
       modalVisible: false,
       showCustomAddress: false,
       customAddress:
@@ -84,6 +84,18 @@ class DonateButton extends React.Component {
       // protecting against overflow occuring when BigNumber receives something that results in NaN
       this.setState({ amount: new BigNumber(amount) });
     }
+  }
+
+  getMaxAmount() {
+    const { selectedToken } = this.state;
+    const { NativeTokenBalance, model } = this.props;
+
+    const balance =
+      selectedToken.symbol === config.nativeTokenName ? NativeTokenBalance : selectedToken.balance;
+
+    if (model.maxDonation && balance.gt(model.maxDonation)) return model.maxDonation;
+
+    return new BigNumber(utils.fromWei(balance.toString()));
   }
 
   pollToken() {
@@ -133,7 +145,7 @@ class DonateButton extends React.Component {
   closeDialog() {
     this.setState({
       modalVisible: false,
-      amount: new BigNumber('0'),
+      amount: '0',
       formIsValid: false,
     });
   }
@@ -141,10 +153,7 @@ class DonateButton extends React.Component {
   openDialog() {
     this.setState({
       modalVisible: true,
-      amount: new BigNumber('0'),
-      // prevState.selectedToken.symbol === config.nativeTokenName
-      //   ? utils.fromWei(this.props.NativeTokenBalance ? this.props.NativeTokenBalance : '')
-      //   : utils.fromWei(prevState.selectedToken.balance ? prevState.selectedToken.balance : ''), // FIXME: Is it correct to use from wei? Shouldn't it consider precision of the token?
+      amount: this.getMaxAmount().toString(),
       formIsValid: false,
     });
   }
@@ -295,23 +304,14 @@ class DonateButton extends React.Component {
       selectedToken,
     } = this.state;
 
+    const maxAmount = this.getMaxAmount();
+
     const style = {
       display: 'inline-block',
     };
 
     const balance =
       selectedToken.symbol === config.nativeTokenName ? NativeTokenBalance : selectedToken.balance;
-
-    // Determines max amount based on wallet balance or milestone maxAmount
-    const _getMaxAmount = () => {
-      // set max donation amount user wallet's balance
-      const _balance = new BigNumber(utils.fromWei((balance && balance.toString()) || '0'));
-      let _maxAmount = _balance;
-
-      // if milestone max amount < balance, set it to maxAmount
-      if (model.maxDonation && model.maxDonation.lt(_maxAmount)) _maxAmount = model.maxDonation;
-      return _maxAmount;
-    };
 
     return (
       <span style={style}>
@@ -393,22 +393,22 @@ class DonateButton extends React.Component {
             <span className="label">How much {selectedToken.symbol} do you want to donate?</span>
 
             {validProvider &&
-              _getMaxAmount().toNumber() !== 0 &&
-              balance.gte(0) && (
+              maxAmount.toNumber() !== 0 &&
+              balance.gt(0) && (
                 <div className="form-group">
                   <Slider
                     type="range"
                     name="amount2"
                     min={0}
-                    max={_getMaxAmount().toNumber()}
-                    step={_getMaxAmount().toNumber() / 10}
-                    value={amount.toNumber()}
+                    max={maxAmount.toNumber()}
+                    step={maxAmount.toNumber() / 10}
+                    value={Number(Number(amount).toFixed(4))}
                     labels={{
                       0: '0',
-                      [_getMaxAmount().toFixed()]: _getMaxAmount().toFixed(),
+                      [maxAmount.toFixed()]: maxAmount.toFixed(4),
                     }}
-                    format={val => `${val} ${config.nativeTokenName}`}
-                    onChange={newAmount => this.setAmount(newAmount)}
+                    tooltip={false}
+                    onChange={(name, newAmount) => this.setState({ amount: newAmount })}
                   />
                 </div>
               )}
@@ -418,15 +418,15 @@ class DonateButton extends React.Component {
                 name="amount"
                 id="amount-input"
                 type="number"
-                value={amount.toString()}
-                onChange={(name, newAmount) => this.setAmount(newAmount)}
+                value={amount}
+                onChange={(name, newAmount) => this.setState({ amount: newAmount })}
                 validations={{
-                  lessOrEqualTo: _getMaxAmount().toNumber(),
+                  lessOrEqualTo: maxAmount.toNumber(),
                   greaterThan: 0,
                 }}
                 validationErrors={{
                   greaterThan: `Please enter value greater than 0 ${selectedToken.symbol}`,
-                  lessOrEqualTo: `This donation exceeds your wallet balance or the milestone max amount: ${_getMaxAmount().toString()} ${
+                  lessOrEqualTo: `This donation exceeds your wallet balance or the milestone max amount: ${maxAmount.toFixed()} ${
                     selectedToken.symbol
                   }.`,
                 }}
@@ -478,7 +478,7 @@ class DonateButton extends React.Component {
 
             {validProvider &&
               currentUser &&
-              _getMaxAmount().toNumber() !== 0 &&
+              maxAmount.toNumber() !== 0 &&
               balance !== '0' && (
                 <LoaderButton
                   className="btn btn-success"

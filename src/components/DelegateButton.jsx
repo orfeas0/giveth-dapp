@@ -44,7 +44,7 @@ class DelegateButton extends Component {
       objectsToDelegateTo: [],
       modalVisible: false,
       amount: '0',
-      maxAmount: '0',
+      maxAmount: new BigNumber('0'),
     };
 
     this.submit = this.submit.bind(this);
@@ -56,8 +56,8 @@ class DelegateButton extends Component {
       .then(() =>
         this.setState({
           modalVisible: true,
-          amount: utils.fromWei(this.props.donation.amountRemaining),
-          maxAmount: utils.fromWei(this.props.donation.amountRemaining),
+          amount: this.props.donation.amountRemaining.toString(),
+          maxAmount: this.props.donation.amountRemaining,
         }),
       )
       .catch(err => {
@@ -81,7 +81,7 @@ class DelegateButton extends Component {
 
     this.setState({
       maxAmount,
-      amount: maxAmount,
+      amount: maxAmount.toString(),
       objectsToDelegateTo: target.value,
     });
   }
@@ -94,10 +94,7 @@ class DelegateButton extends Component {
     const admin = this.props.types.find(t => t._id === this.state.objectsToDelegateTo[0]);
 
     // TODO: find a more friendly way to do this.
-    if (
-      admin instanceof Milestone &&
-      new BigNumber(admin.maxAmount).lt(admin.currentBalance || new BigNumber('0'))
-    ) {
+    if (admin instanceof Milestone && admin.maxAmount.lt(admin.currentBalance || 0)) {
       React.toast.error('That milestone has reached its funding goal. Please pick another.');
       return;
     }
@@ -153,18 +150,11 @@ class DelegateButton extends Component {
 
     DonationService.delegate(
       this.props.donation,
-      utils.toWei(model.amount.toString()),
+      utils.toWei(model.amount),
       admin,
       onCreated,
       onSuccess,
     );
-  }
-
-  setAmount(amount) {
-    if (!isNaN(parseFloat(amount))) {
-      // protecting against overflow occuring when BigNumber receives something that results in NaN
-      this.setState({ amount: new BigNumber(amount) });
-    }
   }
 
   render() {
@@ -240,14 +230,13 @@ class DelegateButton extends Component {
                 min={0}
                 max={maxAmount.toNumber()}
                 step={maxAmount.toNumber() / 10}
-                value={this.state.amount.toNumber()}
+                value={Number(this.state.amount)}
                 labels={{
                   0: '0',
                   [maxAmount.toNumber()]: maxAmount.toFixed(),
                 }}
                 tooltip={false}
-                format={val => `${val} ${donation.token.symbol}`}
-                onChange={amount => this.setAmount(amount)}
+                onChange={amount => this.setState({ amount: Number(amount).toFixed(2) })}
               />
             </div>
 
@@ -261,8 +250,8 @@ class DelegateButton extends Component {
                   isNumeric: 'Provide correct number',
                 }}
                 name="amount"
-                value={this.state.amount.toString()}
-                onChange={(name, amount) => this.setAmount(amount)}
+                value={this.state.amount}
+                onChange={amount => this.setState({ amount })}
               />
             </div>
 

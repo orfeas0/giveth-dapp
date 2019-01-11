@@ -30,14 +30,14 @@ const Balances = ({ entity }) => (
                   <tr key={dc._id}>
                     <td className="td-donations-amount">
                       {dc.currentBalance && dc.currentBalance !== 'null'
-                        ? dc.currentBalance.toString()
+                        ? dc.currentBalance.toNumber()
                         : 0}{' '}
                       {dc.symbol}
                     </td>
                     <td className="td-donations-number">{dc.donationCount || 0}</td>
                     <td className="td-donations-amount">
                       {dc.totalDonated && dc.totalDonated !== 'null'
-                        ? dc.totalDonated.toString()
+                        ? dc.totalDonated.toNumber()
                         : 0}{' '}
                       {dc.symbol}
                     </td>

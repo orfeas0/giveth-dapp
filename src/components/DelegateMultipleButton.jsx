@@ -132,13 +132,6 @@ class DelegateMultipleButton extends Component {
     );
   }
 
-  setAmount(amount) {
-    if (!isNaN(parseFloat(amount))) {
-      // protecting against overflow occuring when BigNumber receives something that results in NaN
-      this.setState({ amount: new BigNumber(amount) });
-    }
-  }
-
   selectedObject({ target }) {
     this.setState({ objectToDelegateFrom: target.value, isLoadingDonations: true });
 
@@ -199,7 +192,7 @@ class DelegateMultipleButton extends Component {
           this.setState({
             delegations,
             maxAmount: amount,
-            amount,
+            amount: amount.toString(),
             isLoadingDonations: false,
           });
         },
@@ -260,7 +253,7 @@ class DelegateMultipleButton extends Component {
 
     DonationService.delegateMultiple(
       this.state.delegations,
-      utils.toWei(this.state.amount.toString()),
+      utils.toWei(this.state.amount),
       this.props.milestone || this.props.campaign,
       onCreated,
       onSuccess,
@@ -320,7 +313,7 @@ class DelegateMultipleButton extends Component {
                 <InputToken
                   name="delegateFrom"
                   label="Delegate from:"
-                  placeholder={this.props.campaign ? 'Select a DAC' : 'Select a DAC or Campaign'}
+                  placeholder={milestone ? 'Select a DAC or Campaign' : 'Select a DAC'}
                   value={this.state.objectToDelegateFrom}
                   options={delegationOptions}
                   onSelect={this.selectedObject}
@@ -331,7 +324,7 @@ class DelegateMultipleButton extends Component {
               {this.state.objectToDelegateFrom.length !== 1 && (
                 <p>
                   Please select entity from which you want to delegate money to the{' '}
-                  {campaign ? campaign.title : milestone.title}{' '}
+                  {milestone ? milestone.title : campaign.title}{' '}
                 </p>
               )}
               {this.state.objectToDelegateFrom.length === 1 &&
@@ -371,10 +364,16 @@ class DelegateMultipleButton extends Component {
                             tooltip={false}
                             max={maxAmount.toNumber()}
                             step={maxAmount.toNumber() / 10}
-                            value={Number(amount.toNumber())}
+                            value={Number(amount)}
                             labels={{ 0: '0', [maxAmount.toNumber()]: maxAmount.toFixed() }}
-                            format={val => `${val} ${selectedToken.symbol}`}
-                            onChange={newAmount => this.setAmount(newAmount)}
+                            onChange={newAmount =>
+                              this.setState(prevState => ({
+                                amount:
+                                  Number(newAmount).toFixed(2) > prevState.maxAmount
+                                    ? prevState.maxAmount
+                                    : Number(newAmount).toFixed(2),
+                              }))
+                            }
                           />
                         </div>
 
@@ -388,8 +387,8 @@ class DelegateMultipleButton extends Component {
                               isNumeric: 'Provide correct number',
                             }}
                             name="amount"
-                            value={amount.toString()}
-                            onChange={(name, newAmount) => this.setAmount(newAmount)}
+                            value={amount}
+                            onChange={(name, newAmount) => this.setState({ amount: newAmount })}
                           />
                         </div>
 
