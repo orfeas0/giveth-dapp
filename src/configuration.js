@@ -20,11 +20,11 @@ const configurations = {
     liquidPledgingAddress: '0x46579394802b5e4d2C0647436BFcc71A2d9E8478',
     lppCampaignFactoryAddress: '0xe3155F7A49897e7860476b5A625B258ebe43cA98',
     lppCappedMilestoneFactoryAddress: '0x1b6E4a9eB8264E46784a782c87e3529E203425Ca',
+    nodeConnection: 'http://localhost:8545',
+    networkName: 'ganache',
+    nodeId: 88,
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://localhost:3030',
-    nodeConnection: 'http://localhost:8548',
-    nodeId: 88,
-    networkName: 'RSK Ganache',
     ipfsGateway: 'http://localhost:8080/ipfs/',
     sendErrors: false,
     analytics: {
