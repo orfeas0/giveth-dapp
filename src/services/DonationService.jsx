@@ -707,7 +707,7 @@ class DonationService {
       amountRemaining: amount,
       pledgeId: 0,
       status: Donation.PENDING,
-      homeTxHash: txHash,
+      txHash,
       mined: false,
       token,
     };
