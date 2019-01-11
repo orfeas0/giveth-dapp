@@ -36,7 +36,7 @@ class MilestoneConversations extends Component {
         .watch({ listStrategy: 'always' })
         .find({
           query: {
-            milestoneId: this.props.milestone._id,
+            milestoneId: this.props.milestone.id,
             $sort: { createdAt: -1 },
           },
         })
@@ -66,7 +66,7 @@ class MilestoneConversations extends Component {
 
   render() {
     const { isLoading, conversations, etherScanUrl } = this.state;
-    const { milestone, currentUser, balance } = this.props;
+    const { milestone, balance, currentUser } = this.props;
 
     return (
       <div id="milestone-conversations">
@@ -109,8 +109,8 @@ class MilestoneConversations extends Component {
                           <strong>Attachments</strong>
                           <MilestoneProof
                             items={c.items}
-                            isEditMode={false}
                             token={milestone.token}
+                            isEditMode={false}
                           />
                         </Form>
                       )}

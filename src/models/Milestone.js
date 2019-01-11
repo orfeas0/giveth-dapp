@@ -37,6 +37,7 @@ export default class MilestoneModel extends BasicModel {
       reviewer,
       mined = false,
       pluginAddress = '0x0000000000000000000000000000000000000000',
+      campaignId,
     } = data;
 
     this._selectedFiatType = selectedFiatType;
@@ -62,6 +63,7 @@ export default class MilestoneModel extends BasicModel {
     this._recipient = recipient;
     this._reviewer = reviewer;
     this._mined = mined;
+    this._campaignId = campaignId;
   }
 
   /**
@@ -125,6 +127,20 @@ export default class MilestoneModel extends BasicModel {
 
   static get type() {
     return 'milestone';
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get type() {
+    return MilestoneModel.type;
+  }
+
+  get title() {
+    return this._title;
+  }
+
+  set title(value) {
+    this.checkType(value, ['string'], 'title');
+    this._title = value;
   }
 
   get description() {
@@ -318,5 +334,14 @@ export default class MilestoneModel extends BasicModel {
 
   get recipient() {
     return this._recipient;
+  }
+
+  set campaignId(value) {
+    this.checkType(value, ['string'], 'campaignId');
+    this._campaignId = value;
+  }
+
+  get campaignId() {
+    return this._campaignId;
   }
 }

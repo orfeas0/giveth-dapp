@@ -147,7 +147,9 @@ class BaseDelegateMultipleButton extends Component {
   setAmount(amount) {
     if (!isNaN(parseFloat(amount))) {
       // protecting against overflow occuring when BigNumber receives something that results in NaN
-      this.setState({ amount: new BigNumber(amount) });
+      this.setState(prevState => ({
+        amount: amount.gt(prevState.maxAmount) ? prevState.maxAmount : amount,
+      }));
     }
   }
 
@@ -205,8 +207,13 @@ class BaseDelegateMultipleButton extends Component {
             new BigNumber('0'),
           );
 
-          if (this.props.milestone && this.props.milestone.maxAmount.lt(amount))
-            amount = this.props.milestone.maxAmount;
+          if (this.props.milestone) {
+            const maxDonationAmount = this.props.milestone.maxAmount.minus(
+              this.props.milestone.currentBalance,
+            );
+
+            if (maxDonationAmount.lt(amount)) amount = maxDonationAmount;
+          }
 
           this.setState({
             delegations,
@@ -370,6 +377,7 @@ class BaseDelegateMultipleButton extends Component {
                     {delegations.length === 0 && (
                       <p>
                         The amount available to delegate is {maxAmount.toString()}{' '}
+                        {/* TODO: The amount available to delegate is {this.state.maxAmount}{' '} */}
                         {selectedToken.symbol}. Please select a different currency or different
                         source DAC/Campaign.
                       </p>
@@ -385,9 +393,9 @@ class BaseDelegateMultipleButton extends Component {
                             min={0}
                             max={maxAmount.toNumber()}
                             step={maxAmount.toNumber() / 10}
-                            value={Number(amount.toNumber())}
+                            value={amount.toNumber()}
                             labels={{ 0: '0', [maxAmount.toNumber()]: maxAmount.toFixed() }}
-                            format={val => `${val} ${selectedToken.symbol}`}
+                            tooltip={false}
                             onChange={newAmount => this.setAmount(newAmount)}
                           />
                         </div>

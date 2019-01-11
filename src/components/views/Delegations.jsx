@@ -19,6 +19,7 @@ import { getUserName, getUserAvatar, convertEthHelper } from '../../lib/helpers'
 import DelegationProvider, {
   Consumer as DelegationConsumer,
 } from '../../contextProviders/DelegationProvider';
+import Donation from '../../models/Donation';
 
 /**
  * The my delegations view
@@ -75,6 +76,7 @@ const Delegations = ({ balance, currentUser }) => (
                                 </thead>
                                 <tbody>
                                   {delegations.map(d => (
+                                    // TODO: <tr key={d.adminId}>
                                     <tr key={d._id}>
                                       {currentUser.authenticated && (
                                         <td className="td-actions">
@@ -83,13 +85,10 @@ const Delegations = ({ balance, currentUser }) => (
                                           {(d.delegateId > 0 ||
                                             d.ownerTypeId === currentUser.address) &&
                                             isForeignNetwork &&
+                                            d.status === Donation.WAITING &&
                                             d.amountRemaining > 0 && (
                                               <DelegateButton
-                                                types={campaigns.concat(
-                                                  milestones.filter(
-                                                    m => m.symbol === d.token.symbol,
-                                                  ),
-                                                )}
+                                                types={campaigns.concat(milestones)}
                                                 donation={d}
                                                 balance={balance}
                                                 symbol={(d.token && d.token.symbol) || 'ETH'}
@@ -100,6 +99,7 @@ const Delegations = ({ balance, currentUser }) => (
                                     to milestones of that campaign */}
                                           {d.ownerType === 'campaign' &&
                                             isForeignNetwork &&
+                                            d.status === Donation.COMMITTED &&
                                             d.amountRemaining > 0 && (
                                               <DelegateButton
                                                 types={milestones.filter(

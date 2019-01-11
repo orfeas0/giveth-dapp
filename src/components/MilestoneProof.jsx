@@ -123,13 +123,12 @@ MilestoneProof.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   onItemsChanged: PropTypes.func,
   isEditMode: PropTypes.bool.isRequired,
-  milestoneStatus: PropTypes.string,
+  milestoneStatus: PropTypes.string.isRequired,
   token: PropTypes.shape().isRequired,
 };
 
 MilestoneProof.defaultProps = {
   onItemsChanged: () => {},
-  milestoneStatus: '',
 };
 
 export default MilestoneProof;

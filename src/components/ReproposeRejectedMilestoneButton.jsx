@@ -27,6 +27,7 @@ class ReproposeRejectedMilestoneButton extends Component {
         required: false,
         cta: 'Reject proposal',
         enableAttachProof: false,
+        token: milestone.token,
       })
       .then(proof =>
         MilestoneService.reproposeRejectedMilestone({

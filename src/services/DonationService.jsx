@@ -54,35 +54,44 @@ const createAllowance = async (tokenContractAddress, tokenHolderAddress, amount)
       .send({ from: tokenHolderAddress })
       .on('transactionHash', transactionHash => {
         txHash = transactionHash;
+
+        if (amount === 0) {
+          React.toast.info(
+            <p>
+              Please wait until your transaction is mined...
+              <br />
+              <strong>
+                You will be asked to make another transaction to set the correct allowance!
+              </strong>
+              <br />
+              <a
+                href={`${config.homeEtherscan}tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View transaction
+              </a>
+            </p>,
+          );
+        } else {
+          React.toast.info(
+            <p>
+              Please wait until your transaction is mined...
+              <br />
+              <strong>You will be asked to make another transaction for your donation!</strong>
+              <br />
+              <a
+                href={`${config.homeEtherscan}tx/${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View transaction
+              </a>
+            </p>,
+          );
+        }
       });
   } catch (e) {
-    if (amount === 0) {
-      React.toast.info(
-        <p>
-          Please wait until your transaction is mined...
-          <br />
-          <strong>
-            You will be asked to make another transaction to set the correct allowance!
-          </strong>
-          <br />
-          <a href={`${config.homeEtherscan}tx/${txHash}`} target="_blank" rel="noopener noreferrer">
-            View transaction
-          </a>
-        </p>,
-      );
-    } else {
-      React.toast.info(
-        <p>
-          Please wait until your transaction is mined...
-          <br />
-          <strong>You will be asked to make another transaction for your donation!</strong>
-          <br />
-          <a href={`${config.homeEtherscan}tx/${txHash}`} target="_blank" rel="noopener noreferrer">
-            View transaction
-          </a>
-        </p>,
-      );
-    }
     throw e;
   }
 };
@@ -265,7 +274,7 @@ class DonationService {
               onCancel(err);
             } else {
               ErrorPopup(
-                'Thare was a problem with the delegation transaction.',
+                'There was a problem with catching the transaction hash, but your transaction probably went through.',
                 `${etherScanUrl}tx/${txHash}`,
               );
               onError(err);
@@ -384,7 +393,7 @@ class DonationService {
               onCancel(err);
             } else {
               ErrorPopup(
-                'Thare was a problem with the delegation transaction.',
+                'There was a problem with the delegation transaction.',
                 `${etherScanUrl}tx/${txHash}`,
               );
               onError(err);

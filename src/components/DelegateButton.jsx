@@ -14,6 +14,7 @@ import 'react-rangeslider/lib/index.css';
 import GA from 'lib/GoogleAnalytics';
 import Donation from 'models/Donation';
 import Milestone from 'models/Milestone';
+import Campaign from 'models/Campaign';
 import { checkBalance } from '../lib/middleware';
 
 import DonationService from '../services/DonationService';
@@ -42,8 +43,8 @@ class DelegateButton extends Component {
       isSaving: false,
       objectsToDelegateTo: [],
       modalVisible: false,
-      amount: props.donation.amountRemaining,
-      maxAmount: props.donation.amountRemaining,
+      amount: new BigNumber('0'),
+      maxAmount: new BigNumber('0'),
     };
 
     this.submit = this.submit.bind(this);
@@ -52,7 +53,13 @@ class DelegateButton extends Component {
 
   openDialog() {
     checkBalance(this.props.balance)
-      .then(() => this.setState({ modalVisible: true }))
+      .then(() =>
+        this.setState({
+          modalVisible: true,
+          amount: utils.fromWei(this.props.donation.amountRemaining),
+          maxAmount: utils.fromWei(this.props.donation.amountRemaining),
+        }),
+      )
       .catch(err => {
         if (err === 'noBalance') {
           // handle no balance error
@@ -65,9 +72,12 @@ class DelegateButton extends Component {
 
     let maxAmount = this.props.donation.amountRemaining;
 
-    if (admin && admin.type === Milestone.type) {
-      if (utils.toBN(admin.maxDelegationAmount).lt(maxAmount))
-        maxAmount = admin.maxDelegationAmount;
+    if (admin && admin instanceof Milestone) {
+      const maxDelegationAmount = admin.maxAmount.minus(admin.currentBalance);
+
+      if (maxDelegationAmount.lt(this.props.donation.amountRemaining)) {
+        maxAmount = maxDelegationAmount;
+      }
     }
 
     this.setState({
@@ -86,12 +96,13 @@ class DelegateButton extends Component {
     const admin = this.props.types.find(t => t._id === this.state.objectsToDelegateTo[0]);
 
     // TODO: find a more friendly way to do this.
-    if (admin.type === Milestone.type && toBN(admin.maxAmount).lt(toBN(admin.totalDonated || 0))) {
+    if (admin instanceof Milestone && toBN(admin.maxAmount).lt(toBN(admin.currentBalance || 0))) {
       React.toast.error('That milestone has reached its funding goal. Please pick another.');
       return;
     }
 
     const onCreated = txLink => {
+      this.setState({ isSaving: false });
       const msg =
         donation.delegateId > 0 ? (
           <p>
@@ -161,6 +172,22 @@ class DelegateButton extends Component {
     const style = { display: 'inline-block' };
     const pStyle = { whiteSpace: 'normal' };
 
+    const getTypes = () =>
+      types
+        .filter(t => !(t instanceof Milestone) || t.token.symbol === donation.token.symbol)
+        .map(t => {
+          const el = {};
+          el.name = t.title;
+          el.type = t instanceof Milestone ? Milestone.type : Campaign.type;
+          el.id = t._id;
+          el.element = (
+            <span>
+              {t.title} <em>{t instanceof Milestone ? 'Milestone' : 'Campaign'}</em>
+            </span>
+          );
+          return el;
+        });
+
     return (
       <span style={style}>
         <button type="button" className="btn btn-success btn-sm" onClick={() => this.openDialog()}>
@@ -196,7 +223,7 @@ class DelegateButton extends Component {
                   milestoneOnly ? 'Select a Milestone' : 'Select a Campaign or Milestone'
                 }
                 value={objectsToDelegateTo}
-                options={types}
+                options={getTypes()}
                 onSelect={this.selectedObject}
                 maxLength={1}
               />
@@ -214,9 +241,10 @@ class DelegateButton extends Component {
                 value={this.state.amount.toNumber()}
                 labels={{
                   0: '0',
+                  // TODO: correct?
                   [maxAmount.toNumber()]: maxAmount.toFixed(),
                 }}
-                format={val => `${val} ${donation.token.symbol}`}
+                tooltip={false}
                 onChange={amount => this.setAmount(amount)}
               />
             </div>

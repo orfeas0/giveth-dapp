@@ -16,14 +16,15 @@ import BackgroundImageHeader from 'components/BackgroundImageHeader';
 import DonateButton from 'components/DonateButton';
 import ErrorPopup from 'components/ErrorPopup';
 import GoBackButton from 'components/GoBackButton';
-import ShowTypeDonations from 'components/ShowTypeDonations';
 import Loader from 'components/Loader';
 import MilestoneItem from 'components/MilestoneItem';
+import ListDonations from 'components/ListDonations';
 import MilestoneConversations from 'components/MilestoneConversations';
 import DelegateMultipleButton from 'components/DelegateMultipleButton';
 import { getUserAvatar, getUserName } from '../../lib/helpers';
 
 import MilestoneService from '../../services/MilestoneService';
+import ShareOptions from '../ShareOptions';
 
 /**
   Loads and shows a single milestone
@@ -134,10 +135,11 @@ class ViewMilestone extends Component {
                       }}
                       currentUser={currentUser}
                       history={history}
-                      maxAmount={milestone.maxAmount}
+                      maxDonationAmount={milestone.maxAmount.minus(milestone.currentBalance)}
                     />
                     {currentUser && (
                       <DelegateMultipleButton
+                        style={{ padding: '10px 10px' }}
                         milestone={milestone}
                         campaign={campaign}
                         balance={balance}
@@ -161,14 +163,17 @@ class ViewMilestone extends Component {
               <div className="row">
                 <div className="col-md-8 m-auto">
                   <div>
-                    <GoBackButton
-                      history={history}
-                      styleName="inline"
-                      title={`Campaign: ${campaign.title}`}
-                    />
+                    <div className="go-back-section">
+                      <GoBackButton
+                        history={history}
+                        styleName="inline"
+                        title={`Campaign: ${campaign.title}`}
+                      />
+                      <ShareOptions pageUrl={window.location.href} pageTitle={milestone.title} />
+                    </div>
 
                     <center>
-                      <Link to={`/profile/${milestone.owner.address}`}>
+                      <Link to={`/profile/${milestone.ownerAddress}`}>
                         <Avatar size={50} src={getUserAvatar(milestone.owner)} round />
                         <p className="small">{getUserName(milestone.owner)}</p>
                       </Link>
@@ -289,9 +294,9 @@ class ViewMilestone extends Component {
                             this Milestone. Based on the requested amount in fiat.
                           </small>
                           {milestone.maxAmount.toString()} {milestone.token.symbol}
-                          {milestone.fiatAmount &&
+                          {milestone.items.length === 0 &&
                             milestone.selectedFiatType &&
-                            milestone.items.length === 0 && (
+                            milestone.fiatAmount && (
                               <span>
                                 {' '}
                                 ({milestone.fiatAmount.toString()} {milestone.selectedFiatType})
@@ -339,8 +344,7 @@ class ViewMilestone extends Component {
 
               <div className="row spacer-top-50 spacer-bottom-50">
                 <div className="col-md-8 m-auto">
-                  <h4>Donations</h4>
-                  <ShowTypeDonations donations={donations} isLoading={isLoadingDonations} />
+                  <ListDonations donations={donations} isLoading={isLoadingDonations} />
                   {this.isActiveMilestone() && (
                     <DonateButton
                       model={{
@@ -354,7 +358,7 @@ class ViewMilestone extends Component {
                       currentUser={currentUser}
                       history={history}
                       type={milestone.type}
-                      maxAmount={milestone.maxAmount}
+                      maxDonationAmount={milestone.maxAmount.minus(milestone.currentBalance)}
                     />
                   )}
                 </div>
