@@ -219,6 +219,7 @@ class ConversationModal extends Component {
                     isEditMode
                     items={items}
                     onItemsChanged={returnedItems => this.onItemsChanged(returnedItems)}
+                    milestoneStatus={milestone.status}
                     token={milestone.token}
                   />
                 </div>
