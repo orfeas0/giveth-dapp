@@ -224,7 +224,6 @@ class EditMilestone extends Component {
       const rate = resp.rates[milestone.selectedFiatType];
       milestone.fiatAmount = rate ? milestone.fiatAmount.div(rate) : new BigNumber(0);
       milestone.conversionRateTimestamp = resp.timestamp;
-      console.log('Conversion rate Timestamp:', resp.timestamp);
 
       this.setState({ milestone });
     });
@@ -362,8 +361,6 @@ class EditMilestone extends Component {
         conversionRate: this.props.currentRate.rates[milestone.selectedFiatType],
         token: milestone.token,
       };
-
-      console.log('constructedModel updating: ', constructedModel);
 
       // in itemized mode, we calculate the maxAmount from the items
       // convert to string here, the milestone only works with BigNumber
@@ -519,7 +516,6 @@ class EditMilestone extends Component {
                 });
             })
             .catch(err => {
-              console.log('err', err);
               if (txHash && err.message && err.message.includes('unknown transaction')) return; // bug in web3 seems to constantly fail due to this error, but the tx is correct
               this.setState({ isSaving: false, isBlocking: true });
               ErrorPopup(

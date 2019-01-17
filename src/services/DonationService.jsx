@@ -772,9 +772,7 @@ class DonationService {
           const pledge = pledges.find(n => n.id === donation.pledgeId);
 
           if (pledge) {
-            pledge.amount = new BigNumber(pledge.amount).add(
-              new BigNumber(utils.fromWei(donation.amountRemaining)),
-            );
+            pledge.amount = pledge.amount.plus(new BigNumber(donation.amountRemaining));
           } else {
             pledges.push({
               id: donation.pledgeId,
@@ -796,6 +794,66 @@ class DonationService {
         );
       })
       .catch(err => err);
+  }
+
+  static async createLPDonation({
+    from,
+    giverUser,
+    giverId,
+    donateToAdminId,
+    token,
+    amount,
+    donateTo, // dac, campaign, milestone
+    addGiver = false,
+    onCreated = () => {},
+    onSuccess = () => {},
+    onError = () => {},
+    onCancel = () => {},
+  }) {
+    const network = await getNetwork();
+    const etherScanUrl = network.etherscan;
+    const opts = { from, $extraGas: extraGas() };
+    let lpMethod;
+    let tx;
+    let txHash;
+
+    if (addGiver) {
+      lpMethod = network.liquidPledging.addGiverAndDonate;
+    } else {
+      lpMethod = network.liquidPledging.donate;
+    }
+
+    if (token.address === '0x0000000000000000000000000000000000000000') {
+      // native currency, set value on options
+      opts.value = amount;
+      tx = lpMethod(giverId, donateToAdminId, opts);
+    } else {
+      // token
+
+      // actually uses 225710, but runs out of gas if exact
+      // opts = Object.assign(opts, { gas: 300000 });
+
+      tx = lpMethod(giverId, donateToAdminId, token.address, amount, opts);
+    }
+
+    return tx
+      .on('transactionHash', async transactionHash => {
+        txHash = transactionHash;
+
+        await DonationService.newFeathersDonation(giverUser, donateTo, amount, token, txHash);
+        onCreated(`${etherScanUrl}tx/${txHash}`);
+      })
+      .then(() => {
+        onSuccess(`${etherScanUrl}tx/${txHash}`);
+      })
+      .catch(e => {
+        if (!e.message.includes('User denied transaction signature')) {
+          const err = !(e instanceof Error) ? JSON.stringify(e, null, 2) : e;
+          onCancel(err);
+        } else {
+          onError(e);
+        }
+      });
   }
 }
 

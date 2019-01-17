@@ -12,7 +12,6 @@ import Slider from 'react-rangeslider';
 import GA from 'lib/GoogleAnalytics';
 import getNetwork from '../lib/blockchain/getNetwork';
 import User from '../models/User';
-import extraGas from '../lib/blockchain/extraGas';
 import pollEvery from '../lib/pollEvery';
 import LoaderButton from './LoaderButton';
 import ErrorPopup from './ErrorPopup';
@@ -63,7 +62,6 @@ class BaseDonateButton extends React.Component {
       isSaving: false,
       formIsValid: false,
       amount: new BigNumber('0'),
-      etherscanUrl: '',
       modalVisible: false,
       showCustomAddress: false,
       customAddress:
@@ -80,9 +78,6 @@ class BaseDonateButton extends React.Component {
   }
 
   componentDidMount() {
-    getNetwork().then(network => {
-      this.setState({ etherscanUrl: network.homeEtherscan });
-    });
     this.pollToken();
   }
 
@@ -174,135 +169,108 @@ class BaseDonateButton extends React.Component {
   donate(model) {
     const { currentUser } = this.props;
     const { adminId } = this.props.model;
-    const { etherscanUrl, showCustomAddress, selectedToken } = this.state;
+    const { showCustomAddress, selectedToken } = this.state;
 
     const amount = utils.toWei(model.amount);
     const isDonationInToken = selectedToken.symbol !== 'ETH';
     const tokenAddress = isDonationInToken ? selectedToken.address : 0;
 
     const _makeDonationTx = async () => {
-      let method;
-      let donationUser;
-      const opts = { from: currentUser.address, $extraGas: extraGas() };
-
-      // actually uses 225710, but runs out of gas if exact
-      // if (isDonationInToken) Object.assign(opts, { gas: 300000 });
-
-      const network = await getNetwork();
+      let txData = {
+        from: currentUser.address,
+        donateToAdminId: adminId,
+        token: selectedToken,
+        amount,
+        donateTo: this.props.model,
+      };
 
       if (showCustomAddress) {
         // Donating on behalf of another user or address
         try {
+          // check if that user exists
           const user = await feathersClient.service('users').get(model.customAddress);
+
           if (user && user.giverId > 0) {
-            method = network.liquidPledging.donate(
-              user.giverId,
-              adminId,
-              tokenAddress,
-              amount,
-              opts,
-            );
-            donationUser = user;
+            txData = Object.assign({}, txData, {
+              giverUser: user,
+              giverId: user.giverId,
+            });
           } else {
-            network.liquidPledging.addGiverAndDonate(
-              model.customAddress,
-              adminId,
-              tokenAddress,
-              amount,
-              opts,
-            );
-            donationUser = { address: model.customAddress };
+            // if not, set the new user and add as giver
+            txData = Object.assign({}, txData, {
+              giverUser: { address: model.customAddress },
+              giverId: model.customAddress,
+              addGiver: true,
+            });
           }
         } catch (e) {
-          network.liquidPledging.addGiverAndDonate(
-            model.customAddress,
-            adminId,
-            tokenAddress,
-            amount,
-            opts,
-          );
-          donationUser = { address: model.customAddress };
+          // we can't be sure if there's a user, so we just set the new user and add as giver
+          txData = Object.assign({}, txData, {
+            giverUser: { address: model.customAddress },
+            giverId: model.customAddress,
+            addGiver: true,
+          });
         }
-      } else {
+      } else if (currentUser.giverId > 0) {
         // Donating on behalf of logged in DApp user
-        method =
-          currentUser.giverId > 0
-            ? network.liquidPledging.donate(
-                currentUser.giverId,
-                adminId,
-                tokenAddress,
-                amount,
-                opts,
-              )
-            : network.liquidPledging.addGiverAndDonate(
-                adminId,
-                currentUser.address,
-                tokenAddress,
-                amount,
-                opts,
-              );
-        donationUser = currentUser;
+        // if user already exists
+        txData = Object.assign({}, txData, {
+          giverUser: currentUser,
+          giverId: currentUser.giverId,
+        });
+      } else {
+        // create the user as a giver
+        txData = Object.assign({}, txData, {
+          giverUser: currentUser,
+          giverId: currentUser.giverId,
+          addGiver: true,
+        });
       }
 
-      let txHash;
-      method
-        .on('transactionHash', async transactionHash => {
-          txHash = transactionHash;
-          this.closeDialog();
-          await DonationService.newFeathersDonation(
-            donationUser,
-            this.props.model,
-            amount,
-            selectedToken,
-            txHash,
-          );
+      DonationService.createLPDonation(
+        Object.assign({}, txData, {
+          onCreated: txUrl => {
+            this.closeDialog();
+            this.setState({
+              modalVisible: false,
+              isSaving: false,
+            });
 
-          this.setState({
-            modalVisible: false,
-            isSaving: false,
-          });
+            GA.trackEvent({
+              category: 'Donation',
+              action: 'donated',
+              label: txUrl,
+            });
 
-          GA.trackEvent({
-            category: 'Donation',
-            action: 'donated',
-            label: `${etherscanUrl}tx/${txHash}`,
-          });
-
-          React.toast.info(
-            <p>
-              Awesome! Your donation is pending...
-              <br />
-              <a href={`${etherscanUrl}tx/${txHash}`} target="_blank" rel="noopener noreferrer">
-                View transaction
-              </a>
-            </p>,
-          );
-        })
-        .then(() => {
-          React.toast.success(
-            <p>
-              Woot! Woot! Donation received. You are awesome!
-              <br />
-              <a href={`${etherscanUrl}tx/${txHash}`} target="_blank" rel="noopener noreferrer">
-                View transaction
-              </a>
-            </p>,
-          );
-        })
-        .catch(e => {
-          if (!e.message.includes('User denied transaction signature')) {
-            const err = !(e instanceof Error) ? JSON.stringify(e, null, 2) : e;
-            ErrorPopup(
-              'Something went wrong with your donation.',
-              `${etherscanUrl}tx/${txHash} => ${err}`,
+            React.toast.info(
+              <p>
+                Awesome! Your donation is pending...
+                <br />
+                <a href={txUrl} target="_blank" rel="noopener noreferrer">
+                  View transaction
+                </a>
+              </p>,
             );
-          } else {
-            React.toast.info('The transaction was cancelled. No donation has been made :-(');
-          }
-          this.setState({
-            isSaving: false,
-          });
-        });
+          },
+          onSuccess: txUrl => {
+            React.toast.success(
+              <p>
+                Woot! Woot! Donation received. You are awesome!
+                <br />
+                <a href={txUrl} target="_blank" rel="noopener noreferrer">
+                  View transaction
+                </a>
+              </p>,
+            );
+          },
+          onError: err => {
+            ErrorPopup('Something went wrong with rejecting the proposed milestone', err);
+            this.setState({
+              isSaving: false,
+            });
+          },
+        }),
+      );
     };
 
     // if donating in token, first approve transfer of token by LiquidPledging by creating an allowance
@@ -434,7 +402,7 @@ class BaseDonateButton extends React.Component {
                 </div>
               )}
 
-            <span className="label">How much ${selectedToken.symbol} do you want to donate?</span>
+            <span className="label">How much {selectedToken.symbol} do you want to donate?</span>
 
             {validProvider &&
               _getMaxAmount().toNumber() !== 0 &&
