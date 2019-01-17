@@ -174,7 +174,7 @@ export default class MilestoneModel extends BasicModel {
   }
 
   set token(value) {
-    this.checkInstanceOf(value, ['object'], 'token');
+    this.checkType(value, ['object'], 'token');
     this._token = value;
   }
 
