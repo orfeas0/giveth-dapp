@@ -16,7 +16,7 @@ const {
 
 const configurations = {
   localhost: {
-    title: 'RSK Ganache',
+    title: 'localhost',
     liquidPledgingAddress: '0x46579394802b5e4d2C0647436BFcc71A2d9E8478',
     lppCampaignFactoryAddress: '0xe3155F7A49897e7860476b5A625B258ebe43cA98',
     lppCappedMilestoneFactoryAddress: '0x1b6E4a9eB8264E46784a782c87e3529E203425Ca',
@@ -38,10 +38,10 @@ const configurations = {
     liquidPledgingAddress: '0xEa7217d84F0F6EA472Ef50508539ac7aeEe91c50',
     lppCampaignFactoryAddress: '0x4164C775EA8991C67ae18885699b4711eC24928e',
     lppCappedMilestoneFactoryAddress: '0xe74f271a319Dfc709850bd7426ceD2857eba85E9',
-    nodeConnection: 'http://68.183.77.54:4343',
+    nodeConnection: 'https://node.giveth.site',
     networkName: 'rsk_testnet',
-    etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
-    feathersConnection: 'http://68.183.77.54:3030',
+    etherscan: 'https://explorer.testnet.rsk.co/',
+    feathersConnection: 'https://feathers.dapp.giveth.site',
     sendErrors: false,
     nodeId: 31,
     analytics: {
