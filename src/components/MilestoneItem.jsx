@@ -37,7 +37,7 @@ class MilestoneItem extends React.Component {
           </span>
         </td>
 
-        <td className="td-item-amount-ether">{convertEthHelper(item.wei)}</td>
+        <td className="td-item-amount-ether">{convertEthHelper(item.fiatAmount)}</td>
 
         <td className="td-item-file-upload">
           {item.image &&
