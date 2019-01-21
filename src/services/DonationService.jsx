@@ -191,6 +191,8 @@ class DonationService {
 
         const receiverId = delegateTo.projectId;
 
+        console.log(network, web3, encodedPledges);
+
         const executeTransfer = () => {
           let contract;
 
@@ -202,6 +204,9 @@ class DonationService {
               $extraGas: extraGas(),
             });
           }
+
+          console.log(delegateId, encodedPledges, receiverId, delegateEntity);
+
           return network.liquidPledging.mTransfer(delegateId, encodedPledges, receiverId, {
             from: delegateEntity.ownerAddress,
             $extraGas: extraGas(),
@@ -274,7 +279,7 @@ class DonationService {
               onCancel(err);
             } else {
               ErrorPopup(
-                'Thare was a problem with the delegation transaction.',
+                'There was a problem with the delegation transaction.',
                 `${etherScanUrl}tx/${txHash}`,
               );
               onError(err);
