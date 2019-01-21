@@ -393,7 +393,7 @@ class DonateButton extends React.Component {
             <span className="label">How much {selectedToken.symbol} do you want to donate?</span>
 
             {validProvider &&
-              maxAmount.toNumber() !== 0 &&
+              maxAmount.toNumber() > 0 &&
               balance.gt(0) && (
                 <div className="form-group">
                   <Slider
@@ -402,13 +402,13 @@ class DonateButton extends React.Component {
                     min={0}
                     max={maxAmount.toNumber()}
                     step={maxAmount.toNumber() / 10}
-                    value={Number(Number(amount).toFixed(4))}
+                    value={Number(amount)}
                     labels={{
                       0: '0',
-                      [maxAmount.toFixed()]: maxAmount.toFixed(4),
+                      [maxAmount.toFixed()]: maxAmount.toFixed(),
                     }}
                     tooltip={false}
-                    onChange={(name, newAmount) => this.setState({ amount: newAmount })}
+                    onChange={newAmount => this.setState({ amount: newAmount.toString() })}
                   />
                 </div>
               )}

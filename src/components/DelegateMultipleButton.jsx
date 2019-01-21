@@ -192,7 +192,7 @@ class DelegateMultipleButton extends Component {
           this.setState({
             delegations,
             maxAmount: amount,
-            amount: amount.toString(),
+            amount: amount.toFixed(),
             isLoadingDonations: false,
           });
         },
@@ -347,7 +347,7 @@ class DelegateMultipleButton extends Component {
 
                     {delegations.length === 0 && (
                       <p>
-                        The amount available to delegate is {maxAmount.toString()}{' '}
+                        The amount available to delegate is {maxAmount.toFixed()}{' '}
                         {selectedToken.symbol}. Please select a different currency or different
                         source DAC/Campaign.
                       </p>

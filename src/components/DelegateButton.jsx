@@ -81,7 +81,7 @@ class DelegateButton extends Component {
 
     this.setState({
       maxAmount,
-      amount: maxAmount.toString(),
+      amount: maxAmount.toFixed(),
       objectsToDelegateTo: target.value,
     });
   }
