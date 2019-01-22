@@ -9,7 +9,6 @@ const {
   REACT_APP_TOKEN_ADDRESSES,
   REACT_APP_BLOCKEXPLORER,
   REACT_APP_BUGS_EMAIL = 'bugs@giveth.io',
-  REACT_APP_DEFAULT_GASPRICE = 10,
   REACT_APP_NETWORK_NAME,
   REACT_APP_NATIVE_TOKEN_NAME = 'ETH',
 } = process.env;
@@ -131,7 +130,6 @@ config.feathersConnection = REACT_APP_FEATHERJS_CONNECTION_URL || config.feather
 config.nodeConnection = REACT_APP_ETH_NODE_CONNECTION_URL || config.nodeConnection;
 config.decimals = REACT_APP_DECIMALS;
 config.bugsEmail = REACT_APP_BUGS_EMAIL;
-config.defaultGasPrice = REACT_APP_DEFAULT_GASPRICE;
 config.networkName = REACT_APP_NETWORK_NAME || config.networkName;
 config.nativeTokenName = REACT_APP_NATIVE_TOKEN_NAME || config.nativeTokenName;
 config.sendErrors = ['develop', 'release', 'beta', 'rsk_testnet'].includes(REACT_APP_ENVIRONMENT);

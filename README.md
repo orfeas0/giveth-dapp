@@ -105,7 +105,7 @@ In the following sections you will learn all you need to know to run the DApp lo
   The token balance should show up automatically and the token symbol is MMT.
   However, in the dApp the token symbol is referred to as ANT, b/c the dapp needs to be able to fetch a conversion rate.
 
-  NOTE: 
+  NOTE:
   When resetting feathers or redeploying the contracts, you need to remove the keystore from metamask and follow this procedure again.
 
 ### Build
@@ -131,7 +131,6 @@ REACT_APP_CAMPAIGN_FACTORY_ADDRESS | Differs per REACT_APP_ENVIRONMENT | Overwri
 REACT_APP_CAPPED_MILESTONE_FACTORY_ADDRESS | Differs per REACT_APP_ENVIRONMENT | Overwrites the Milestone contract address. |
 REACT_APP_TOKEN_ADDRESSES | Differs per REACT_APP_ENVIRONMENT | Overwrites the bridged token addresses. This is a JSON object string w/ token name : token address. |
 REACT_APP_BLOCKEXPLORER | Differs per REACT_APP_ENVIRONMENT | Overwrites the block explorer base URL. The DApp assumes such blockexplorer api is `\<BLOCKEXPLORER\>/tx/\<TRANSACTION_HASH\>` |
-REACT_APP_DEFAULT_GASPRICE | 10 | Overwrites the default gasPrice that is used if ethgasstation service is down. The value is in gwei. |
 
 Example of `.env.local` file that makes the DApp run on port 8080, connects to the **develop** environment and uses custom blockexplorer:
 
@@ -155,7 +154,7 @@ Google analytics and Hotjar can be enabled per environment:
 
 The following events are tracked with Google Analytics:
 - pageviews
-- signup 
+- signup
 - signin
 - creation of DACs/Campaigns/Milestones
 - editing of DACs/Campaigns/Milestones
@@ -201,7 +200,7 @@ Name | Blockchain | Branch Deployed | Auto Deploy | Use |
 You can change the environment to which the DApp connects through the node environment variables. See the [Configuration](#Configuration) section for more details.
 
 ### Release Process
-The development uses the Gitflow process with 2 weeks long sprints. This means there is new release to be tested every fortnight. We invite contributors to help us test the DApp in the release 
+The development uses the Gitflow process with 2 weeks long sprints. This means there is new release to be tested every fortnight. We invite contributors to help us test the DApp in the release
 environment before we merge it to the master branch and deploy to production environments. If you are interested, write to the DApp Development channel on [Riot](https://join.giveth.io). You can read more about the release planning on [our wiki](https://wiki.giveth.io/documentation/DApp/product-development-testing/).
 
 ## Help

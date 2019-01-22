@@ -6,7 +6,6 @@ import { Form, Input } from 'formsy-react-components';
 import User from '../models/User';
 import GivethWallet from '../lib/blockchain/GivethWallet';
 import WalletService from '../services/WalletService';
-import { getGasPrice } from '../lib/helpers';
 
 import ErrorPopup from './ErrorPopup';
 
@@ -35,7 +34,6 @@ class WithdrawButton extends Component {
       amount: '',
       modalVisible: false,
       to: '',
-      gasPrice: 4,
     };
 
     this.submit = this.submit.bind(this);
@@ -43,12 +41,9 @@ class WithdrawButton extends Component {
   }
 
   openDialog() {
-    getGasPrice().then(gasPrice =>
-      this.setState({
-        gasPrice,
-        modalVisible: true,
-      }),
-    );
+    this.setState({
+      modalVisible: true,
+    });
   }
 
   afterCreate(etherScanUrl, txHash) {
@@ -109,7 +104,7 @@ class WithdrawButton extends Component {
 
   render() {
     const { wallet } = this.props;
-    const { isSaving, amount, formIsValid, gasPrice, to } = this.state;
+    const { isSaving, amount, formIsValid, to } = this.state;
     const style = {
       display: 'inline-block',
     };
@@ -132,8 +127,6 @@ class WithdrawButton extends Component {
 
             <p>
               Your wallet balance: <em>{wallet.getBalance()} ETH</em>
-              <br />
-              Gas price: <em>{gasPrice} Gwei</em>
             </p>
 
             <Form
