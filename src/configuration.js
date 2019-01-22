@@ -10,7 +10,7 @@ const {
   REACT_APP_BLOCKEXPLORER,
   REACT_APP_BUGS_EMAIL = 'bugs@giveth.io',
   REACT_APP_NETWORK_NAME,
-  REACT_APP_NATIVE_TOKEN_NAME = 'ETH',
+  REACT_APP_NATIVE_TOKEN_NAME,
 } = process.env;
 
 const configurations = {
@@ -31,6 +31,7 @@ const configurations = {
       useGoogleAnalytics: true,
       useHotjar: false,
     },
+    nativeTokenName: 'ETH',
   },
   rsk_testnet: {
     title: 'RSK Testnet',
@@ -68,6 +69,7 @@ const configurations = {
       useGoogleAnalytics: true,
       useHotjar: false,
     },
+    nativeTokenName: 'ETH',
   },
   release: {
     title: 'release',
@@ -85,6 +87,7 @@ const configurations = {
       useGoogleAnalytics: true,
       useHotjar: false,
     },
+    nativeTokenName: 'ETH',
   },
   beta: {
     title: 'beta',
@@ -102,6 +105,7 @@ const configurations = {
       useGoogleAnalytics: true,
       useHotjar: true,
     },
+    nativeTokenName: 'ETH',
   },
 };
 
