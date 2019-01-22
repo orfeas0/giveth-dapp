@@ -50,7 +50,8 @@ const ListDonations = props => (
                               &nbsp;
                             </span>
                           )}
-                          {convertEthHelper(d.amount)} {(d.token && d.token.symbol) || 'ETH'}
+                          {convertEthHelper(d.amount)}{' '}
+                          {(d.token && d.token.symbol) || config.nativeTokenName}
                         </td>
                         <td className="td-user">
                           {d.giver && (

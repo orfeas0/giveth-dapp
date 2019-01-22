@@ -6,6 +6,7 @@ import { Form, Input } from 'formsy-react-components';
 import User from '../models/User';
 import GivethWallet from '../lib/blockchain/GivethWallet';
 import WalletService from '../services/WalletService';
+import config from '../configuration';
 
 import ErrorPopup from './ErrorPopup';
 
@@ -126,7 +127,10 @@ class WithdrawButton extends Component {
             <strong>Withdrawing from your Giveth wallet</strong>
 
             <p>
-              Your wallet balance: <em>{wallet.getBalance()} ETH</em>
+              Your wallet balance:{' '}
+              <em>
+                {wallet.getBalance()} {config.nativeTokenName}
+              </em>
             </p>
 
             <Form
@@ -154,7 +158,7 @@ class WithdrawButton extends Component {
               <div className="form-group">
                 <Input
                   name="amount"
-                  label="How much ETH do you want to withdraw?"
+                  label={`How much ${config.nativeTokenName} do you want to withdraw?`}
                   type="number"
                   step="any"
                   value={amount}
@@ -163,7 +167,7 @@ class WithdrawButton extends Component {
                     greaterThan: 0.0099999999999,
                   }}
                   validationErrors={{
-                    greaterThan: 'Minimum value must be at least 0.01 ETH',
+                    greaterThan: `Minimum value must be at least 0.01 ${config.nativeTokenName}`,
                     lessThan: 'This withdrawal amount exceeds your wallet balance.',
                   }}
                   required
@@ -176,7 +180,7 @@ class WithdrawButton extends Component {
                 type="submit"
                 disabled={isSaving || !formIsValid}
               >
-                {isSaving ? 'Withdrawing...' : 'Withdraw ETH'}
+                {isSaving ? 'Withdrawing...' : 'Withdraw'}
               </button>
             </Form>
           </Modal>

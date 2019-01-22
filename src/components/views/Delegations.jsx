@@ -91,7 +91,10 @@ const Delegations = ({ balance, currentUser }) => (
                                                 )}
                                                 donation={d}
                                                 balance={balance}
-                                                symbol={(d.token && d.token.symbol) || 'ETH'}
+                                                symbol={
+                                                  (d.token && d.token.symbol) ||
+                                                  config.nativeTokenName
+                                                }
                                               />
                                             )}
 
@@ -129,7 +132,7 @@ const Delegations = ({ balance, currentUser }) => (
                                           </span>
                                         )}
                                         {convertEthHelper(d.amountRemaining)}{' '}
-                                        {(d.token && d.token.symbol) || 'ETH'}
+                                        {(d.token && d.token.symbol) || config.nativeTokenName}
                                       </td>
                                       <td className="td-user">
                                         <Link to={`profile/${d.giver.address}`}>

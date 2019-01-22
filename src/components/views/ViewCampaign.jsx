@@ -25,6 +25,7 @@ import CampaignService from '../../services/CampaignService';
 
 import ErrorPopup from '../ErrorPopup';
 import ErrorBoundary from '../ErrorBoundary';
+import config from '../../configuration';
 
 /**
  * The Campaign detail view mapped to /campaing/id
@@ -145,7 +146,7 @@ class ViewCampaign extends Component {
                     type: Campaign.type,
                     title: campaign.title,
                     id: campaign.id,
-                    token: { symbol: 'ETH' },
+                    token: { symbol: config.nativeTokenName },
                     adminId: campaign.projectId,
                   }}
                   currentUser={currentUser}
@@ -263,7 +264,7 @@ class ViewCampaign extends Component {
                         title: campaign.title,
                         id: campaign.id,
                         adminId: campaign.projectId,
-                        token: { symbol: 'ETH' },
+                        token: { symbol: config.nativeTokenName },
                       }}
                       currentUser={currentUser}
                       history={history}

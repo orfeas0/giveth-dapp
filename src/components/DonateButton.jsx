@@ -40,8 +40,8 @@ const modalStyles = {
 const _getTokenWhitelist = () => {
   const r = React.whitelist.tokenWhitelist;
   return r.map(t => {
-    if (t.symbol === 'ETH') {
-      t.name = `${config.networkName} ETH`;
+    if (t.symbol === config.nativeTokenName) {
+      t.name = `${config.networkName} ${config.nativeTokenName}`;
     }
     t.balance = utils.toBN(0);
     return t;
@@ -107,8 +107,8 @@ class BaseDonateButton extends React.Component {
       this.stopPolling();
       this.stopPolling = undefined;
     }
-    // ETH balance is provided by the Web3Provider
-    if (selectedToken.symbol === 'ETH') return;
+    // Native token balance is provided by the Web3Provider
+    if (selectedToken.symbol === config.nativeTokenName) return;
 
     this.stopPolling = pollEvery(
       () => ({
@@ -154,8 +154,8 @@ class BaseDonateButton extends React.Component {
     this.setState({
       modalVisible: true,
       amount: new BigNumber('0'),
-      // prevState.selectedToken.symbol === 'ETH'
-      //   ? utils.fromWei(this.props.ETHBalance ? this.props.ETHBalance : '')
+      // prevState.selectedToken.symbol === config.nativeTokenName
+      //   ? utils.fromWei(this.props.NativeTokenBalance ? this.props.NativeTokenBalance : '')
       //   : utils.fromWei(prevState.selectedToken.balance ? prevState.selectedToken.balance : ''), // FIXME: Is it correct to use from wei? Shouldn't it consider precision of the token?
       formIsValid: false,
     });
@@ -172,7 +172,7 @@ class BaseDonateButton extends React.Component {
     const { showCustomAddress, selectedToken } = this.state;
 
     const amount = utils.toWei(model.amount);
-    const isDonationInToken = selectedToken.symbol !== 'ETH';
+    const isDonationInToken = selectedToken.symbol !== config.nativeTokenName;
     const tokenAddress = isDonationInToken ? selectedToken.address : 0;
 
     const _makeDonationTx = async () => {
@@ -295,7 +295,7 @@ class BaseDonateButton extends React.Component {
   }
 
   render() {
-    const { model, currentUser, ETHBalance, validProvider, isCorrectNetwork } = this.props;
+    const { model, currentUser, NativeTokenBalance, validProvider, isCorrectNetwork } = this.props;
     const {
       amount,
       formIsValid,
@@ -311,7 +311,8 @@ class BaseDonateButton extends React.Component {
       display: 'inline-block',
     };
 
-    const balance = selectedToken.symbol === 'ETH' ? ETHBalance : selectedToken.balance;
+    const balance =
+      selectedToken.symbol === config.nativeTokenName ? NativeTokenBalance : selectedToken.balance;
 
     // Determines max amount based on wallet balance or milestone maxAmount
     const _getMaxAmount = () => {
@@ -389,7 +390,7 @@ class BaseDonateButton extends React.Component {
                       name="token"
                       id="token-select"
                       label="Make your donation in"
-                      helpText="Select ETH or the token you want to donate"
+                      helpText={`Select ${config.nativeTokenName} or the token you want to donate`}
                       value={selectedToken.address}
                       options={tokenWhitelistOptions}
                       onChange={address => this.setToken(address)}
@@ -419,7 +420,7 @@ class BaseDonateButton extends React.Component {
                       0: '0',
                       [_getMaxAmount().toFixed()]: _getMaxAmount().toFixed(),
                     }}
-                    format={val => `${val} ETH`}
+                    format={val => `${val} ${config.nativeTokenName}`}
                     onChange={newAmount => this.setAmount(newAmount)}
                   />
                 </div>
@@ -524,7 +525,7 @@ const DonateButton = ({ model, currentUser }) => (
   <Web3Consumer>
     {({ state: { isCorrectNetwork, validProvider, balance } }) => (
       <BaseDonateButton
-        ETHBalance={balance}
+        NativeTokenBalance={balance}
         validProvider={validProvider}
         isCorrectNetwork={isCorrectNetwork}
         model={model}
@@ -554,7 +555,7 @@ DonateButton.propTypes = {
 BaseDonateButton.propTypes = {
   model: modelTypes.isRequired,
   currentUser: PropTypes.instanceOf(User),
-  ETHBalance: PropTypes.instanceOf(BigNumber).isRequired,
+  NativeTokenBalance: PropTypes.instanceOf(BigNumber).isRequired,
   validProvider: PropTypes.bool.isRequired,
   isCorrectNetwork: PropTypes.bool.isRequired,
 };
