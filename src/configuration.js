@@ -42,6 +42,8 @@ const configurations = {
     networkName: 'rsk_testnet',
     etherscan: 'https://explorer.testnet.rsk.co/',
     feathersConnection: 'https://feathers.dapp.giveth.site',
+    ipfsGateway: 'https://ipfs.giveth.io/ipfs/',
+    // ipfsGateway: 'http://68.183.77.54:8080/ipfs',
     sendErrors: false,
     nodeId: 31,
     analytics: {
