@@ -34,9 +34,9 @@ const configurations = {
   },
   rsk_testnet: {
     title: 'RSK Testnet',
-    liquidPledgingAddress: '0xEa7217d84F0F6EA472Ef50508539ac7aeEe91c50',
-    lppCampaignFactoryAddress: '0x4164C775EA8991C67ae18885699b4711eC24928e',
-    lppCappedMilestoneFactoryAddress: '0xe74f271a319Dfc709850bd7426ceD2857eba85E9',
+    liquidPledgingAddress: '0xeef9Eb24EF8f486A89b552FEa51Ba0118F634c9f',
+    lppCampaignFactoryAddress: '0xD3383073a533072232917e39E15f7C4453A71A69',
+    lppCappedMilestoneFactoryAddress: '0xD0E500D5c42Ff36B54aB8C11B8177d30F36d900d',
     nodeConnection: 'https://node.giveth.site',
     networkName: 'rsk_testnet',
     etherscan: 'https://explorer.testnet.rsk.co/',
