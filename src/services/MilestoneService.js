@@ -430,7 +430,7 @@ class MilestoneService {
 
             return milestones
               .patch(milestone._id, {
-                status: Milestone.PROPOSED,
+                status: Milestone.PENDING,
                 mined: false,
                 message: proof.message,
                 proofItems: proof.items,
