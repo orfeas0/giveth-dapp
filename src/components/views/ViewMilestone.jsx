@@ -387,6 +387,7 @@ class ViewMilestone extends Component {
                     total={donationsTotal}
                     loadMore={this.loadMoreDonations}
                     newDonations={newDonations}
+                    useAmountRemaining
                   />
                   {this.isActiveMilestone() && (
                     <DonateButton
