@@ -44,7 +44,7 @@ class DonateButton extends React.Component {
 
     // set initial balance
     const modelToken = props.model.token;
-    modelToken.balance = utils.toBN(0);
+    modelToken.balance = new BigNumber(0);
 
     this.state = {
       isSaving: false,
@@ -95,7 +95,7 @@ class DonateButton extends React.Component {
 
     if (model.maxDonation && balance.gt(model.maxDonation)) return model.maxDonation;
 
-    return new BigNumber(utils.fromWei(balance.toString()));
+    return new BigNumber(utils.fromWei(balance.toFixed()));
   }
 
   pollToken() {
@@ -119,12 +119,12 @@ class DonateButton extends React.Component {
 
             // we are only interested in homeNetwork token balances
             if (!isCorrectNetwork || !currentUser || !currentUser.address || !contract) {
-              return utils.toBN(0);
+              return new BigNumber(0);
             }
 
-            return utils.toBN(await contract.methods.balanceOf(currentUser.address).call());
+            return new BigNumber(await contract.methods.balanceOf(currentUser.address).call());
           } catch (e) {
-            return utils.toBN(0);
+            return new BigNumber(0);
           }
         },
         onResult: balance => {
@@ -386,7 +386,7 @@ class DonateButton extends React.Component {
                   )}
                   {/* TODO: remove this b/c the wallet provider will contain this info */}
                   {config.homeNetworkName} {selectedToken.symbol} balance:&nbsp;
-                  <em>{utils.fromWei(balance ? balance.toString() : '')}</em>
+                  <em>{utils.fromWei(balance ? balance.toFixed() : '')}</em>
                 </div>
               )}
 
