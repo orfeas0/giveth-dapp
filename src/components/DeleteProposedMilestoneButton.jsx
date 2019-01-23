@@ -30,7 +30,7 @@ const DeleteProposedMilestoneButton = ({ milestone, currentUser }) => {
                 <button
                   type="button"
                   className="btn btn-danger btn-sm"
-                  onClick={_deleteProposedMilestone()}
+                  onClick={_deleteProposedMilestone}
                   disable={!isCorrectNetwork}
                 >
                   <i className="fa fa-times-circle-o" />
