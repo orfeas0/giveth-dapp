@@ -24,7 +24,8 @@ const configurations = {
     nodeId: 88,
     etherscan: 'https://etherscan.io/', // this won't work, only here so we can see links during development
     feathersConnection: 'http://localhost:3030',
-    ipfsGateway: 'http://localhost:8080/ipfs/',
+    // ipfsGateway: 'http://localhost:8080/ipfs/',
+    ipfsGateway: 'https://ipfs.giveth.io/ipfs/',
     sendErrors: false,
     analytics: {
       ga_UA: 'UA-103956937-3',

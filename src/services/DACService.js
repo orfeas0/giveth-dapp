@@ -174,9 +174,10 @@ class DACService {
     let txHash;
     let etherScanUrl;
     try {
-      let profileHash;
+      // upload DAC info to IPFS
+      let ipfsHash;
       try {
-        profileHash = await IPFSService.upload(dac.toIpfs());
+        ipfsHash = await IPFSService.upload(dac.toIpfs());
       } catch (err) {
         ErrorPopup('Failed to upload dac to ipfs');
       }
@@ -186,9 +187,9 @@ class DACService {
       const { liquidPledging } = network;
 
       // nothing to update or failed ipfs upload
-      if (dac.delegateId && (dac.url === profileHash || !profileHash)) {
+      if (dac.delegateId && (dac.url === ipfsHash || !ipfsHash)) {
         // ipfs upload may have failed, but we still want to update feathers
-        if (!profileHash) {
+        if (!ipfsHash) {
           await dacs.patch(dac.id, dac.toFeathers(txHash));
         }
         afterSave(null, false);
@@ -203,11 +204,11 @@ class DACService {
             dac.delegateId,
             dac.ownerAddress,
             dac.title,
-            profileHash || '',
+            ipfsHash || '',
             dac.commitTime,
             { from, $extraGas: extraGas() },
           )
-        : liquidPledging.addDelegate(dac.title, profileHash || '', 0, 0, {
+        : liquidPledging.addDelegate(dac.title, ipfsHash || '', 0, 0, {
             from,
             $extraGas: extraGas(),
           });

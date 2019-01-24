@@ -2,7 +2,9 @@ import { withFormsy } from 'formsy-react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { convertEthHelper, getTruncatedText } from 'lib/helpers';
+import { utils } from 'web3';
+
+import { getTruncatedText } from 'lib/helpers';
 import MilestoneItemModel from 'models/MilestoneItem';
 
 /** *
@@ -37,7 +39,7 @@ class MilestoneItem extends React.Component {
           </span>
         </td>
 
-        <td className="td-item-amount-ether">{convertEthHelper(item.fiatAmount)}</td>
+        <td className="td-item-amount-ether">{utils.fromWei(item.wei)}</td>
 
         <td className="td-item-file-upload">
           {item.image &&

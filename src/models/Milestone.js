@@ -2,9 +2,10 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import { utils } from 'web3';
 
-import { getStartOfDayUTC, getRandomWhitelistAddress } from 'lib/helpers';
+import { getStartOfDayUTC, getRandomWhitelistAddress, cleanIpfsPath } from 'lib/helpers';
 import BasicModel from './BasicModel';
 import MilestoneItemModel from './MilestoneItem';
+
 /**
  * The DApp Milestone model
  */
@@ -14,7 +15,7 @@ export default class MilestoneModel extends BasicModel {
 
     const {
       id = data._id || undefined,
-      maxAmount = '',
+      maxAmount = '0',
       selectedFiatType = 'EUR',
       fiatAmount = new BigNumber('0'),
       recipientAddress = '',
@@ -43,7 +44,7 @@ export default class MilestoneModel extends BasicModel {
     } = data;
 
     this._selectedFiatType = selectedFiatType;
-    this._maxAmount = new BigNumber(utils.fromWei(maxAmount));
+    this._maxAmount = utils.fromWei(maxAmount);
     this._fiatAmount = new BigNumber(fiatAmount);
     this._recipientAddress = recipientAddress;
     this._status = status;
@@ -68,6 +69,42 @@ export default class MilestoneModel extends BasicModel {
     this._recipient = recipient;
     this._reviewer = reviewer;
     this._mined = mined;
+  }
+
+  toIpfs() {
+    return {
+      title: this._title,
+      description: this._description,
+      image: cleanIpfsPath(this._image),
+      version: 1,
+    };
+  }
+
+  toFeathers(txHash) {
+    const milestone = {
+      title: this._title,
+      description: this._description,
+      image: cleanIpfsPath(this._image),
+      maxAmount: utils.toWei(this.maxAmount), // maxAmount is stored as wei in feathers
+      ownerAddress: this._ownerAddress,
+      reviewerAddress: this._reviewerAddress,
+      recipientAddress: this._recipientAddress,
+      campaignReviewerAddress: this._campaignReviewerAddress,
+      campaignId: this._campaignId,
+      projectId: this._projectId,
+      status: this._status,
+      items: this._items.map(i => i.toFeathers()),
+      conversionRateTimestamp: this._conversionRateTimestamp,
+      selectedFiatType: this._selectedFiatType,
+      date: this._date,
+      fiatAmount: this._fiatAmount.toString(),
+      conversionRate: this._conversionRate,
+      pluginAddress: this._pluginAddress,
+      token: this._token,
+    };
+    if (!this.id) milestone.txHash = txHash;
+
+    return milestone;
   }
 
   /**
@@ -133,6 +170,10 @@ export default class MilestoneModel extends BasicModel {
     return 'milestone';
   }
 
+  get id() {
+    return this._id;
+  }
+
   get description() {
     return this._description;
   }
@@ -152,11 +193,21 @@ export default class MilestoneModel extends BasicModel {
   }
 
   get maxAmount() {
+    // max amount is not stored in wei
+    if (this.itemizeState) {
+      return this.items
+        .reduce(
+          (accumulator, item) => accumulator.plus(new BigNumber(utils.fromWei(item.wei))),
+          new BigNumber(0),
+        )
+        .toString();
+    }
+
     return this._maxAmount;
   }
 
   set maxAmount(value) {
-    this.checkInstanceOf(value, BigNumber, 'maxAmount');
+    this.checkType(value, ['string'], 'maxAmount');
     this._maxAmount = value;
   }
 
@@ -345,11 +396,28 @@ export default class MilestoneModel extends BasicModel {
   }
 
   set conversionRateTimestamp(value) {
-    console.log('Setting conversion rate timestmap:', value);
     this._conversionRateTimestamp = value;
   }
 
   get conversionRateTimestamp() {
     return this._conversionRateTimestamp;
+  }
+
+  set conversionRate(value) {
+    this.checkType(value, ['number'], 'conversionRate');
+    this._conversionRate = value;
+  }
+
+  get conversionRate() {
+    return this._conversionRate;
+  }
+
+  set campaignReviewerAddress(value) {
+    this.checkType(value, ['string'], 'campaignReviewerAddress');
+    this._campaignReviewerAddress = value;
+  }
+
+  get campaignReviewerAddress() {
+    return this._campaignReviewerAddress;
   }
 }

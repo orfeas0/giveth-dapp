@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BigNumber from 'bignumber.js';
-import { convertEthHelper } from '../lib/helpers';
 import config from '../configuration';
 
 /**
@@ -46,7 +45,7 @@ const CardStats = ({ peopleCount, maxAmount, totalDonated, type, status, token }
           <span>
             <p>Requested</p>
             <p>
-              {convertEthHelper(maxAmount)} {token.symbol}
+              {maxAmount} {token.symbol}
             </p>
           </span>
         )}

@@ -100,7 +100,7 @@ class ViewMilestone extends Component {
     const { history, currentUser, balance } = this.props;
     const { isLoading, donations, isLoadingDonations, campaign, milestone, recipient } = this.state;
 
-    const getMaxDonation = () => milestone.maxAmount.minus(milestone.currentBalance);
+    const getMaxDonation = () => new BigNumber(milestone.maxAmount).minus(milestone.currentBalance);
 
     return (
       <div id="view-milestone-view">
@@ -118,7 +118,7 @@ class ViewMilestone extends Component {
 
               {!milestone.fullyFunded && (
                 <p>
-                  Amount requested: {milestone.maxAmount.toString()} {milestone.token.symbol}
+                  Amount requested: {milestone.maxAmount} {milestone.token.symbol}
                 </p>
               )}
               <p>Campaign: {campaign.title} </p>
@@ -292,7 +292,7 @@ class ViewMilestone extends Component {
                             The maximum amount of {milestone.token.symbol} that can be donated to
                             this Milestone. Based on the requested amount in fiat.
                           </small>
-                          {milestone.maxAmount.toString()} {milestone.token.symbol}
+                          {milestone.maxAmount} {milestone.token.symbol}
                           {milestone.fiatAmount &&
                             milestone.selectedFiatType &&
                             milestone.selectedFiatType !== milestone.token.symbol &&
