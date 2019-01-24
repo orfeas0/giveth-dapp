@@ -70,7 +70,7 @@ class DelegationProvider extends Component {
 
     const query = paramsForServer({
       query: {
-        amountRemaining: { $ne: 0 },
+        amountRemaining: { $gt: 0 },
         $or: [
           { ownerTypeId: { $in: campaignIds }, status: Donation.COMMITTED },
           { delegateTypeId: { $in: dacsIds }, status: Donation.WAITING },
@@ -79,10 +79,6 @@ class DelegationProvider extends Component {
             delegateId: undefined,
             status: Donation.WAITING,
           },
-          // {
-          // ownerTypeId: this.props.currentUser.address,
-          // delegateTypeId: { $gt: 0 },
-          // },
         ],
         $sort: { createdAt: 1 },
         $limit: this.state.itemsPerPage,
@@ -272,11 +268,7 @@ class DelegationProvider extends Component {
 
 DelegationProvider.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-  currentUser: PropTypes.instanceOf(User),
-};
-
-DelegationProvider.defaultProps = {
-  currentUser: undefined,
+  currentUser: PropTypes.instanceOf(User).isRequired,
 };
 
 export default DelegationProvider;
