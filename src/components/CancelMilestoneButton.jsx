@@ -92,11 +92,8 @@ class CancelMilestoneButton extends Component {
       <Web3Consumer>
         {({ state: { isCorrectNetwork } }) => (
           <Fragment>
-            {[
-              milestone.reviewerAddress,
-              milestone.campaignReviewer.address,
-              milestone.recipientAddress,
-            ].includes(currentUser.address) &&
+            {currentUser &&
+              [milestone.reviewerAddress, milestone.ownerAddress].includes(currentUser.address) &&
               ['InProgress', 'NeedReview'].includes(milestone.status) &&
               milestone.mined && (
                 <button

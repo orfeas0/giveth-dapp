@@ -52,7 +52,8 @@ class ReproposeRejectedMilestoneButton extends Component {
       <Web3Consumer>
         {({ state: { isCorrectNetwork } }) => (
           <Fragment>
-            {milestone.ownerAddress === currentUser.address &&
+            {currentUser &&
+              milestone.ownerAddress === currentUser.address &&
               milestone.status === 'Rejected' && (
                 <button
                   type="button"
