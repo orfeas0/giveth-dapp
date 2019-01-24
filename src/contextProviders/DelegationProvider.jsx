@@ -70,13 +70,13 @@ class DelegationProvider extends Component {
 
     const query = paramsForServer({
       query: {
-        amountRemaining: { $gt: 0 },
+        amountRemaining: { $ne: '0' },
         $or: [
           { ownerTypeId: { $in: campaignIds }, status: Donation.COMMITTED },
           { delegateTypeId: { $in: dacsIds }, status: Donation.WAITING },
           {
             ownerTypeId: this.props.currentUser.address,
-            delegateId: undefined,
+            delegateId: { $exists: false },
             status: Donation.WAITING,
           },
         ],

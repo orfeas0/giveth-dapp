@@ -240,7 +240,7 @@ class MyMilestones extends Component {
                                     <td className="td-donations-">
                                       {(m.donationCounters &&
                                         m.donationCounters.length &&
-                                        m.donationCounters[0].currentBalance) ||
+                                        m.donationCounters[0].currentBalance.toString()) ||
                                         '0'}{' '}
                                       {m.token.symbol}
                                     </td>
