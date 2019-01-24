@@ -67,7 +67,7 @@ class DelegateButton extends Component {
     let maxAmount = this.props.donation.amountRemaining;
 
     if (admin && admin instanceof Milestone) {
-      const maxDelegationAmount = admin.maxAmount.minus(admin.currentBalance);
+      const maxDelegationAmount = new BigNumber(admin.maxAmount).minus(admin.currentBalance);
 
       if (maxDelegationAmount.lt(this.props.donation.amountRemaining))
         maxAmount = maxDelegationAmount;
@@ -90,7 +90,7 @@ class DelegateButton extends Component {
     // TODO: find a more friendly way to do this.
     if (
       admin instanceof Milestone &&
-      admin.maxAmount.lt(admin.currentBalance || new BigNumber('0'))
+      new BigNumber(admin.maxAmount).lt(admin.currentBalance || new BigNumber('0'))
     ) {
       React.toast.error('That milestone has reached its funding goal. Please pick another.');
       return;

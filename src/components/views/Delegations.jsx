@@ -74,7 +74,7 @@ const Delegations = ({ balance, currentUser }) => (
                                 </thead>
                                 <tbody>
                                   {delegations.map(d => (
-                                    <tr key={d.adminId}>
+                                    <tr key={d.id}>
                                       {currentUser.authenticated && (
                                         <td className="td-actions">
                                           {/* When donated to a dac, allow delegation
@@ -131,7 +131,7 @@ const Delegations = ({ balance, currentUser }) => (
                                             &nbsp;
                                           </span>
                                         )}
-                                        {d.amountRemaining}{' '}
+                                        {d.amountRemaining.toString()}{' '}
                                         {(d.token && d.token.symbol) || config.nativeTokenName}
                                       </td>
                                       <td className="td-user">
