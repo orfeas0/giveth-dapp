@@ -13,7 +13,7 @@ import { isLoggedIn, checkBalance } from '../../lib/middleware';
 import confirmationDialog from '../../lib/confirmationDialog';
 import Loader from '../Loader';
 import User from '../../models/User';
-import { getTruncatedText, convertEthHelper, history } from '../../lib/helpers';
+import { getTruncatedText, history } from '../../lib/helpers';
 import CampaignService from '../../services/CampaignService';
 import Campaign from '../../models/Campaign';
 import AuthenticationWarning from '../AuthenticationWarning';
@@ -230,8 +230,7 @@ class MyCampaigns extends Component {
                                       {c.donationCounters.length > 0 &&
                                         c.donationCounters.map(counter => (
                                           <p>
-                                            {convertEthHelper(counter.totalDonated)}{' '}
-                                            {counter.symbol}
+                                            {counter.totalDonated.toString()} {counter.symbol}
                                           </p>
                                         ))}
                                       {c.donationCounters.length === 0 && <span>-</span>}

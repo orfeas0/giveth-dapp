@@ -7,18 +7,14 @@ import Pagination from 'react-js-pagination';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { paramsForServer } from 'feathers-hooks-common';
+import { utils } from 'web3';
 
 import { feathersClient } from '../../lib/feathersClient';
 import getNetwork from '../../lib/blockchain/getNetwork';
 import GoBackButton from '../GoBackButton';
 import Loader from '../Loader';
-import {
-  getUserName,
-  getUserAvatar,
-  getTruncatedText,
-  getReadableStatus,
-  convertEthHelper,
-} from '../../lib/helpers';
+import { getUserName, getUserAvatar, getTruncatedText, getReadableStatus } from '../../lib/helpers';
+import config from '../../configuration';
 
 import DACservice from '../../services/DACService';
 import CampaignService from '../../services/CampaignService';
@@ -354,11 +350,14 @@ class Profile extends Component {
                                     {getReadableStatus(m.status)}
                                   </td>
                                   <td className="td-donations-number">
-                                    {convertEthHelper(m.maxAmount)} {m.token.symbol}
+                                    {utils.fromWei(
+                                      m.maxAmount,
+                                    ) /* FIXME: this should not use fromWei but should tak into account decimals of the token */}{' '}
+                                    {m.token.symbol}
                                   </td>
                                   <td className="td-donations-number">{m.donationCount || 0}</td>
                                   <td className="td-donations-amount">
-                                    {convertEthHelper(m.totalDonated)} {m.token.symbol}
+                                    {m.totalDonated} {m.token.symbol}
                                   </td>
                                   <td className="td-reviewer">
                                     {m.reviewer &&
@@ -437,7 +436,7 @@ class Profile extends Component {
                                   </td>
                                   <td className="td-donations-number">{c.donationCount || 0}</td>
                                   <td className="td-donations-amount">
-                                    {convertEthHelper(c.totalDonated)} config.nativeTokenName
+                                    {c.totalDonated || 0} {config.nativeTokenName}
                                   </td>
                                   <td className="td-status">
                                     {(c.status === Campaign.PENDING ||
@@ -510,7 +509,7 @@ class Profile extends Component {
                                   </td>
                                   <td className="td-donations-number">{d.donationCount}</td>
                                   <td className="td-donations-amount">
-                                    {convertEthHelper(d.totalDonated)} config.nativeTokenName
+                                    {d.totalDonated || 0} {config.nativeTokenName}
                                   </td>
                                   <td className="td-status">
                                     {d.status === DAC.PENDING && (
@@ -583,7 +582,7 @@ class Profile extends Component {
                                     </Link>
                                   </td>
                                   <td className="td-donations-amount">
-                                    {convertEthHelper(d.amount)} {d.token.symbol}
+                                    {d.amount.toString()} {d.token.symbol}
                                   </td>
 
                                   <td className="td-transaction-status">

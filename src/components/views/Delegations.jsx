@@ -14,7 +14,7 @@ import config from 'configuration';
 
 import Loader from '../Loader';
 import DelegateButton from '../DelegateButton';
-import { getUserName, getUserAvatar, convertEthHelper } from '../../lib/helpers';
+import { getUserName, getUserAvatar } from '../../lib/helpers';
 
 import DelegationProvider, {
   Consumer as DelegationConsumer,
@@ -131,7 +131,7 @@ const Delegations = ({ balance, currentUser }) => (
                                             &nbsp;
                                           </span>
                                         )}
-                                        {convertEthHelper(d.amountRemaining)}{' '}
+                                        {d.amountRemaining}{' '}
                                         {(d.token && d.token.symbol) || config.nativeTokenName}
                                       </td>
                                       <td className="td-user">

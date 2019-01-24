@@ -8,7 +8,6 @@ import { Consumer as Web3Consumer } from 'contextProviders/Web3Provider';
 import config from 'configuration';
 
 import Loader from '../Loader';
-import { convertEthHelper } from '../../lib/helpers';
 import { Consumer as UserConsumer } from '../../contextProviders/UserProvider';
 import DonationProvider, {
   Consumer as DonationConsumer,
@@ -133,8 +132,7 @@ const Donations = () => (
                                           </Link>
                                         </td>
                                         <td className="td-donations-amount">
-                                          {convertEthHelper(d.amountRemaining)}{' '}
-                                          {d.token && d.token.symbol}
+                                          {d.amountRemaining.toString()} {d.token && d.token.symbol}
                                         </td>
 
                                         {etherScanUrl && (

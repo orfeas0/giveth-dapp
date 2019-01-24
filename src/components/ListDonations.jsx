@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import config from 'configuration';
 import Loader from './Loader';
-import { getUserName, getUserAvatar, convertEthHelper } from '../lib/helpers';
+import { getUserName, getUserAvatar } from '../lib/helpers';
 import Donation from '../models/Donation';
 
 /**
@@ -50,7 +50,7 @@ const ListDonations = props => (
                               &nbsp;
                             </span>
                           )}
-                          {convertEthHelper(d.amount)}{' '}
+                          {d.amount.toString()}{' '}
                           {(d.token && d.token.symbol) || config.nativeTokenName}
                         </td>
                         <td className="td-user">
