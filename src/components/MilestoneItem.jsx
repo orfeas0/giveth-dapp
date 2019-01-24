@@ -53,7 +53,7 @@ class MilestoneItem extends React.Component {
             !isEditMode && (
               <div className="image-preview small">
                 <a href={item.image} target="_blank" rel="noopener noreferrer">
-                  <img src={item.image} alt="View uploaded file" />
+                  <img src={item.image} alt="View uploaded file" style={{ height: 'initial' }} />
                 </a>
               </div>
             )}
