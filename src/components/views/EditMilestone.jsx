@@ -24,7 +24,6 @@ import {
 } from '../../lib/middleware';
 import LoaderButton from '../LoaderButton';
 import User from '../../models/User';
-import templates from '../../lib/milestoneTemplates';
 
 import ErrorPopup from '../ErrorPopup';
 import MilestoneProof from '../MilestoneProof';
@@ -76,8 +75,6 @@ class EditMilestone extends Component {
     this.setFiatAmount = this.setFiatAmount.bind(this);
     this.changeSelectedFiat = this.changeSelectedFiat.bind(this);
     this.onItemsChanged = this.onItemsChanged.bind(this);
-    this.handleTemplateChange = this.handleTemplateChange.bind(this);
-    this.validateMilestoneDesc = this.validateMilestoneDesc.bind(this);
   }
 
   componentDidMount() {
@@ -460,52 +457,10 @@ class EditMilestone extends Component {
     this.setState({ milestone });
   }
 
-  handleTemplateChange(option) {
-    const { milestone } = this.state;
-    milestone.description = templates.templates[option];
-    this.setState({
-      milestone,
-      template: option,
-    });
-  }
-
   triggerRouteBlocking() {
     const form = this.form.current.formsyForm;
     // we only block routing if the form state is not submitted
     this.setState({ isBlocking: form && (!form.state.formSubmitted || form.state.isSubmitting) });
-  }
-
-  validateMilestoneDesc(value) {
-    if (this.state.template === 'Reward DAO') {
-      return (
-        value.includes('Intro') &&
-        value.includes('Description') &&
-        value.includes('Proof') &&
-        value.includes('Video') &&
-        value.includes('Reward')
-      );
-    }
-    if (this.state.template === 'Regular Reward') {
-      return (
-        value.includes('Intro') &&
-        value.includes('Description') &&
-        value.includes('Video') &&
-        value.includes('Amount')
-      );
-    }
-    if (this.state.template === 'Expenses') {
-      return value.includes('Expenses') && value.includes('Description');
-    }
-    if (this.state.template === 'Bounties') {
-      return (
-        value.includes('Intro') &&
-        value.includes('What') &&
-        value.includes('Why') &&
-        value.includes('Deadline') &&
-        value.includes('Link to Bounty')
-      );
-    }
-    return value.length > 10;
   }
 
   render() {
@@ -603,26 +558,11 @@ class EditMilestone extends Component {
                     <div className="form-group">
                       <QuillFormsy
                         name="description"
-                        templatesDropdown
                         label="Explain how you are going to do this successfully."
-                        helpText="Make it as extensive as necessary. Your goal is to build trust,
-                        so that people donate Ether to your Campaign. Don't hesitate to add a detailed budget for this Milestone"
+                        helpText="Make it as extensive as necessary. Your goal is to build trust, so that people donate Ether to your Campaign. Don't hesitate to add a detailed budget for this Milestone"
                         value={milestone.description}
-                        placeholder="Describe how you're going to execute your Milestone successfully
-                        ..."
-                        onTextChanged={content => this.constructSummary(content)}
-                        validations={{
-                          // eslint-disable-next-line
-                          templateValidator: function(values, value) {
-                            return this.validateMilestoneDesc(value);
-                          }.bind(this),
-                        }}
+                        placeholder="Describe how you're going to execute your Milestone successfully..."
                         help="Describe your Milestone."
-                        handleTemplateChange={this.handleTemplateChange}
-                        validationErrors={{
-                          templateValidator:
-                            'Please provide at least 10 characters and do not edit the template keywords.',
-                        }}
                         required
                       />
                     </div>
@@ -748,7 +688,7 @@ class EditMilestone extends Component {
                                 type="number"
                                 step="any"
                                 label={`Maximum amount in ${milestone.selectedFiatType}`}
-                                value={milestone.fiatAmount.toNumber()}
+                                value={milestone.fiatAmount.toString()}
                                 placeholder="10"
                                 validations="greaterThan:0"
                                 validationErrors={{
