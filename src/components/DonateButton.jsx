@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-restricted-globals */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-modal';
@@ -21,6 +19,7 @@ import { feathersClient } from '../lib/feathersClient';
 import { Consumer as Web3Consumer } from '../contextProviders/Web3Provider';
 import NetworkWarning from './NetworkWarning';
 import SelectFormsy from './SelectFormsy';
+import { Consumer as WhiteListConsumer } from '../contextProviders/WhiteListProvider';
 
 const POLL_DELAY_TOKENS = 2000;
 
@@ -37,20 +36,9 @@ const modalStyles = {
   },
 };
 
-const _getTokenWhitelist = () => {
-  const r = React.whitelist.tokenWhitelist;
-  return r.map(t => {
-    if (t.symbol === config.nativeTokenName) {
-      t.name = `${config.networkName} ${config.nativeTokenName}`;
-    }
-    t.balance = utils.toBN(0);
-    return t;
-  });
-};
-
 Modal.setAppElement('#root');
 
-class BaseDonateButton extends React.Component {
+class DonateButton extends React.Component {
   constructor(props) {
     super(props);
 
@@ -66,11 +54,11 @@ class BaseDonateButton extends React.Component {
       showCustomAddress: false,
       customAddress:
         props.currentUser && props.currentUser.address ? props.currentUser.address : undefined,
-      tokenWhitelistOptions: _getTokenWhitelist().map(t => ({
+      tokenWhitelistOptions: props.tokenWhitelist.map(t => ({
         value: t.address,
         title: t.name,
       })),
-      selectedToken: props.model.type === 'milestone' ? modelToken : _getTokenWhitelist()[0],
+      selectedToken: props.model.type === 'milestone' ? modelToken : props.tokenWhitelist[0],
     };
 
     this.submit = this.submit.bind(this);
@@ -86,13 +74,14 @@ class BaseDonateButton extends React.Component {
   }
 
   setToken(address) {
-    this.setState({ selectedToken: _getTokenWhitelist().find(t => t.address === address) }, () =>
-      this.pollToken(),
+    this.setState(
+      { selectedToken: this.props.tokenWhitelist.find(t => t.address === address) },
+      () => this.pollToken(),
     );
   }
 
   setAmount(amount) {
-    if (!isNaN(parseFloat(amount))) {
+    if (!Number.isNaN(parseFloat(amount))) {
       // protecting against overflow occuring when BigNumber receives something that results in NaN
       this.setState({ amount: new BigNumber(amount) });
     }
@@ -521,20 +510,6 @@ class BaseDonateButton extends React.Component {
   }
 }
 
-const DonateButton = ({ model, currentUser }) => (
-  <Web3Consumer>
-    {({ state: { isCorrectNetwork, validProvider, balance } }) => (
-      <BaseDonateButton
-        NativeTokenBalance={balance}
-        validProvider={validProvider}
-        isCorrectNetwork={isCorrectNetwork}
-        model={model}
-        currentUser={currentUser}
-      />
-    )}
-  </Web3Consumer>
-);
-
 const modelTypes = PropTypes.shape({
   type: PropTypes.string.isRequired,
   adminId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -548,24 +523,30 @@ const modelTypes = PropTypes.shape({
 DonateButton.propTypes = {
   model: modelTypes.isRequired,
   currentUser: PropTypes.instanceOf(User),
-};
-
-// eslint isn't smart enough to be able to use Object.assign({}, DonateButton.propTypes, {...})
-// so we have to duplicate them
-BaseDonateButton.propTypes = {
-  model: modelTypes.isRequired,
-  currentUser: PropTypes.instanceOf(User),
   NativeTokenBalance: PropTypes.instanceOf(BigNumber).isRequired,
   validProvider: PropTypes.bool.isRequired,
   isCorrectNetwork: PropTypes.bool.isRequired,
+  tokenWhitelist: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
 
 DonateButton.defaultProps = {
   currentUser: undefined,
 };
 
-BaseDonateButton.defaultProps = {
-  currentUser: undefined,
-};
-
-export default DonateButton;
+export default props => (
+  <WhiteListConsumer>
+    {({ state: { tokenWhitelist } }) => (
+      <Web3Consumer>
+        {({ state: { isCorrectNetwork, validProvider, balance } }) => (
+          <DonateButton
+            NativeTokenBalance={balance}
+            validProvider={validProvider}
+            isCorrectNetwork={isCorrectNetwork}
+            tokenWhitelist={tokenWhitelist}
+            {...props}
+          />
+        )}
+      </Web3Consumer>
+    )}
+  </WhiteListConsumer>
+);

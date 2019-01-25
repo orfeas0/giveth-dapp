@@ -19,17 +19,6 @@ export { Consumer };
 React.minimumWalletBalance = 0.01;
 React.minimumWalletBalanceInWei = utils.toBN(utils.toWei('0.01'));
 
-React.whitelist = {};
-
-// Fetch whitelist
-feathersClient
-  .service('/whitelist')
-  .find()
-  .then(whitelist => {
-    React.whitelist = whitelist;
-    console.log('React.whitelist', whitelist);
-  });
-
 /**
  * This container holds the application and its routes.
  * It is also responsible for loading application persistent data.
