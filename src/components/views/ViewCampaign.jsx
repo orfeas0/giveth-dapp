@@ -152,7 +152,7 @@ class ViewCampaign extends Component {
                   currentUser={currentUser}
                   history={history}
                 />
-                {currentUser && (
+                {currentUser.authenticated && (
                   <DelegateMultipleButton
                     style={{ padding: '10px 10px' }}
                     campaign={campaign}
