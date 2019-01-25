@@ -74,10 +74,9 @@ class DonateButton extends React.Component {
   }
 
   setToken(address) {
-    this.setState(
-      { selectedToken: this.props.tokenWhitelist.find(t => t.address === address) },
-      () => this.pollToken(),
-    );
+    const selectedToken = this.props.tokenWhitelist.find(t => t.address === address);
+    selectedToken.balance = new BigNumber('0'); // FIXME: There should be a balance provider handling all of this...
+    this.setState({ selectedToken }, () => this.pollToken());
   }
 
   setAmount(amount) {
@@ -306,7 +305,7 @@ class DonateButton extends React.Component {
     // Determines max amount based on wallet balance or milestone maxAmount
     const _getMaxAmount = () => {
       // set max donation amount user wallet's balance
-      const _balance = new BigNumber(utils.fromWei(balance.toString()));
+      const _balance = new BigNumber(utils.fromWei((balance && balance.toString()) || '0'));
       let _maxAmount = _balance;
 
       // if milestone max amount < balance, set it to maxAmount
