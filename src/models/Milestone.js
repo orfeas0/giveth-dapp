@@ -211,7 +211,7 @@ export default class MilestoneModel extends BasicModel {
           (accumulator, item) => accumulator.plus(new BigNumber(utils.fromWei(item.wei))),
           new BigNumber(0),
         )
-        .toString();
+        .toFixed();
     }
 
     return this._maxAmount;
