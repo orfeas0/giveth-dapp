@@ -701,7 +701,6 @@ class EditMilestone extends Component {
                           type="submit"
                           disabled={isSaving || !formIsValid}
                           isLoading={isSaving}
-                          network="Foreign"
                           loadingText="Saving..."
                         >
                           <span>{this.btnText()}</span>

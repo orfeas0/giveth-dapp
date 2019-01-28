@@ -321,7 +321,6 @@ class EditCampaign extends Component {
                           type="submit"
                           disabled={isSaving || !formIsValid}
                           isLoading={isSaving}
-                          network="Foreign"
                           loadingText="Saving..."
                         >
                           {isNew ? 'Create' : 'Update'} Campaign

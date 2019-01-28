@@ -11,6 +11,7 @@ const {
   REACT_APP_BUGS_EMAIL = 'bugs@giveth.io',
   REACT_APP_NETWORK_NAME,
   REACT_APP_NATIVE_TOKEN_NAME,
+  REACT_APP_NODE_ID,
 } = process.env;
 
 const configurations = {
@@ -136,7 +137,9 @@ config.nodeConnection = REACT_APP_NODE_CONNECTION_URL || config.nodeConnection;
 config.decimals = REACT_APP_DECIMALS;
 config.bugsEmail = REACT_APP_BUGS_EMAIL;
 config.networkName = REACT_APP_NETWORK_NAME || config.networkName;
+config.nodeId = (REACT_APP_NODE_ID && Number.parseInt(REACT_APP_NODE_ID, 10)) || config.nodeId;
 config.nativeTokenName = REACT_APP_NATIVE_TOKEN_NAME || config.nativeTokenName;
+
 config.sendErrors = ['develop', 'release', 'beta', 'rsk_testnet'].includes(REACT_APP_ENVIRONMENT);
 
 export default config;

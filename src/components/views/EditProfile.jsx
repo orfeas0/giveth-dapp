@@ -219,7 +219,6 @@ class EditProfile extends Component {
                     className="btn btn-success"
                     formNoValidate
                     type="submit"
-                    network="Foreign"
                     disabled={isSaving || isPristine || (currentUser && currentUser.giverId === 0)}
                     isLoading={isSaving}
                     loadingText="Saving..."

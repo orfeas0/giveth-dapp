@@ -110,8 +110,6 @@ class Web3Provider extends Component {
         },
       });
 
-      console.log('web3', web3);
-
       if (!web3.defaultNode) {
         pollAccount(web3, {
           onAccount: async account => {

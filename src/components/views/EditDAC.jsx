@@ -320,7 +320,6 @@ class EditDAC extends Component {
                           type="submit"
                           disabled={isSaving || !formIsValid || (dac.id && dac.delegateId === 0)}
                           isLoading={isSaving}
-                          network="Foreign"
                           loadingText="Saving..."
                         >
                           {isNew ? 'Create DAC' : 'Update DAC'}

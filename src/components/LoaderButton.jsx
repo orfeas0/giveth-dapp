@@ -16,9 +16,6 @@ import config from '../configuration';
  *  @param isLoading      State of button. If true, disables and renders spinner
  *  @param loadingText    Text to show when state is loading
  *  @param children       Elements / text showing when state is not loading
- *  @param network        The network this button acts on. Can be one of ['Home', 'Foreign', undefined].
- *                        If network !=== undefined, the button will be disabled if the incorrect web3 network
- *                        is choosen
  */
 const LoaderButton = ({
   className,
@@ -28,7 +25,6 @@ const LoaderButton = ({
   isLoading,
   loadingText,
   children,
-  network,
 }) => (
   <Web3Consumer>
     {({ state: { isCorrectNetwork } }) => (
@@ -50,9 +46,7 @@ const LoaderButton = ({
         </button>
         {!isCorrectNetwork && (
           <small className="form-text loader-button-network-help">
-            Please choose the{' '}
-            <strong>{network === 'Home' ? config.networkName : config.networkName}</strong> network
-            with your Web3 Provider.
+            Please choose the <strong>{config.networkName}</strong> network with your Web3 Provider.
           </small>
         )}
       </span>
@@ -68,7 +62,6 @@ LoaderButton.propTypes = {
   loadingText: PropTypes.string,
   children: PropTypes.node,
   type: PropTypes.string,
-  network: PropTypes.oneOf(['Home', 'Foreign', undefined]),
 };
 
 LoaderButton.defaultProps = {
@@ -79,7 +72,6 @@ LoaderButton.defaultProps = {
   loadingText: '',
   children: null,
   type: 'button',
-  network: undefined,
 };
 
 export default LoaderButton;
