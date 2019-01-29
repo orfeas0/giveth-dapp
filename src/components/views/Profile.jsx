@@ -173,6 +173,7 @@ class Profile extends Component {
           query: {
             giverAddress: this.state.userAddress,
             homeTxHash: { $exists: true },
+            parentDonations: { $ne: [] },
             $limit: this.state.itemsPerPage,
             $skip: this.state.skipDonationsPages * this.state.itemsPerPage,
           },
