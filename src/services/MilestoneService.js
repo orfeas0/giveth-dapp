@@ -421,7 +421,7 @@ class MilestoneService {
             campaignReviewer.address,
             owner.address,
             utils.toWei(maxAmount.toString()),
-            token.foreignAddress,
+            token.address,
             5 * 24 * 60 * 60, // 5 days in seconds
             { from, $extraGas: extraGas() },
           )
