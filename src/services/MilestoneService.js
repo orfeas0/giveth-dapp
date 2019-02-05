@@ -6,7 +6,7 @@
 import BigNumber from 'bignumber.js';
 import { utils } from 'web3';
 import { paramsForServer } from 'feathers-hooks-common';
-import { LPPCappedMilestone } from 'lpp-capped-milestone';
+import { LPPCappedMilestone } from 'lpp-capped-native-milestone';
 import Milestone from 'models/Milestone';
 import { feathersClient } from 'lib/feathersClient';
 import getNetwork from 'lib/blockchain/getNetwork';

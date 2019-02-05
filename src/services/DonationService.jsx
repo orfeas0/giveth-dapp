@@ -861,10 +861,6 @@ class DonationService {
       tx = lpMethod(giverId, donateToAdminId, opts);
     } else {
       // token
-
-      // actually uses 225710, but runs out of gas if exact
-      // opts = Object.assign(opts, { gas: 300000 });
-
       tx = lpMethod(giverId, donateToAdminId, token.address, amount, opts);
     }
 

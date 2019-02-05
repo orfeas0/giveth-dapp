@@ -1,6 +1,6 @@
 import { LiquidPledging } from 'giveth-liquidpledging';
 import { LPPCampaignFactory } from 'lpp-campaign';
-import { LPPCappedMilestoneFactory } from 'lpp-capped-milestone';
+import { LPPCappedMilestoneFactory } from 'lpp-capped-native-milestone';
 
 import getWeb3 from './getWeb3';
 import config from '../../configuration';
