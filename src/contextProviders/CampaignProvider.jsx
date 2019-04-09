@@ -1,6 +1,6 @@
-import React, { Component, createContext } from 'react';
 import PropTypes from 'prop-types';
-
+import React, { Component, createContext } from 'react';
+import config from '../configuration';
 import CampaignService from '../services/CampaignService';
 
 const Context = createContext();
@@ -36,10 +36,20 @@ class CampaignProvider extends Component {
         CampaignService.getCampaigns(
           this.props.step, // Limit
           this.state.campaigns.length, // Skip
-          (campaigns, total) => {
+          campaigns => {
             this.setState(prevState => ({
-              campaigns: prevState.campaigns.concat(campaigns),
-              total,
+              campaigns: prevState.campaigns
+                .concat(campaigns)
+                .filter(
+                  ({ _ownerAddress }) =>
+                    config.whitelist.filter(address => address === _ownerAddress).length,
+                ),
+              total: prevState.campaigns
+                .concat(campaigns)
+                .filter(
+                  ({ _ownerAddress }) =>
+                    config.whitelist.filter(address => address === _ownerAddress).length,
+                ).length,
               isLoading: false,
             }));
           },

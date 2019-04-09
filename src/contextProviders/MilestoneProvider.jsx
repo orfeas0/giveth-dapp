@@ -1,6 +1,6 @@
-import React, { Component, createContext } from 'react';
 import PropTypes from 'prop-types';
-
+import React, { Component, createContext } from 'react';
+import config from '../configuration';
 import MilestoneService from '../services/MilestoneService';
 
 const Context = createContext();
@@ -35,10 +35,20 @@ class MilestoneProvider extends Component {
         MilestoneService.getActiveMilestones(
           this.props.step, // Limit
           this.state.milestones.length, // Skip
-          (milestones, total) => {
+          milestones => {
             this.setState(prevState => ({
-              milestones: prevState.milestones.concat(milestones),
-              total,
+              milestones: prevState.milestones
+                .concat(milestones)
+                .filter(
+                  ({ _ownerAddress }) =>
+                    config.whitelist.filter(address => address === _ownerAddress).length,
+                ),
+              total: prevState.milestones
+                .concat(milestones)
+                .filter(
+                  ({ _ownerAddress }) =>
+                    config.whitelist.filter(address => address === _ownerAddress).length,
+                ).length,
               isLoading: false,
             }));
           },

@@ -1,6 +1,6 @@
-import React, { Component, createContext } from 'react';
 import PropTypes from 'prop-types';
-
+import React, { Component, createContext } from 'react';
+import config from '../configuration';
 import DACService from '../services/DACService';
 
 const Context = createContext();
@@ -36,10 +36,20 @@ class DACProvider extends Component {
         DACService.getDACs(
           this.props.step, // Limit
           this.state.dacs.length, // Skip
-          (dacs, total) => {
+          dacs => {
             this.setState(prevState => ({
-              dacs: prevState.dacs.concat(dacs),
-              total,
+              dacs: prevState.dacs
+                .concat(dacs)
+                .filter(
+                  ({ _ownerAddress }) =>
+                    config.whitelist.filter(address => address === _ownerAddress).length,
+                ),
+              total: prevState.dacs
+                .concat(dacs)
+                .filter(
+                  ({ _ownerAddress }) =>
+                    config.whitelist.filter(address => address === _ownerAddress).length,
+                ).length,
               isLoading: false,
             }));
           },
