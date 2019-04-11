@@ -68,7 +68,7 @@ const configurations = {
       useHotjar: false,
     },
     nativeTokenName: 'ETH',
-    whitelist: [],
+    whitelist: ['0x5d06bCDeCd3387E57599FF02AbF754392127e026'],
   },
   release: {
     title: 'release',
