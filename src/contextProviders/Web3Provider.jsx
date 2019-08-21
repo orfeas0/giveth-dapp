@@ -122,7 +122,7 @@ class Web3Provider extends Component {
             this.setState({
               account,
               // TODO: find a way for non metamask providers
-              isEnabled: await web3.currentProvider._metamask.isApproved(),
+              isEnabled: true,
             });
           },
           onBalance: balance => {
@@ -254,6 +254,7 @@ class Web3Provider extends Component {
           },
           actions: {
             enableProvider: this.enableProvider,
+            initWeb3Provider: this.initWeb3Provider,
           },
         }}
       >
