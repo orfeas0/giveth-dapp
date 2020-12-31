@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import Sweetalert from 'sweetalert';
 
 import GA from 'lib/GoogleAnalytics';
+import PrivateRoute from '../components/PrivateRoute';
 
 import { history } from '../lib/helpers';
 
@@ -274,9 +275,11 @@ class Application extends Component {
                                                     />
                                                   )}
                                                 />
-                                                <Route
+                                                <PrivateRoute
                                                   exact
                                                   path="/campaigns/:id/milestones/propose"
+                                                  isLoaded={this.userLoaded}
+                                                  currentUser={currentUser}
                                                   render={props => (
                                                     <EditMilestone
                                                       isNew

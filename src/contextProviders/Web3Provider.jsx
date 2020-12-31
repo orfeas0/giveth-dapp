@@ -14,7 +14,7 @@ const POLL_DELAY_NETWORK = 2000;
 const Context = createContext();
 const { Provider, Consumer } = Context;
 
-const getAccount = async web3 => {
+export const getAccount = async web3 => {
   try {
     const addrs = await web3.eth.getAccounts();
     if (addrs.length > 0) return addrs[0];
