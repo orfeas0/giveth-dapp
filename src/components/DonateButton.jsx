@@ -551,14 +551,8 @@ class DonateButton extends React.Component {
             donationOwner = { address: donationOwnerAddress };
           }
         } catch (e) {
-          method = givethBridge.donateAndCreateGiver(
-            donationOwnerAddress,
-            adminId,
-            tokenAddress,
-            amountWei,
-            opts,
-          );
-          donationOwner = { address: donationOwnerAddress };
+          ErrorHandler(e, 'Error on fetching user info, try later');
+          return Promise.resolve();
         }
       } else {
         // Donating on behalf of logged in DApp user
